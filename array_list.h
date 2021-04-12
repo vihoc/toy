@@ -3,18 +3,21 @@
 author: vihoc
 */
 
-#ifndef STRUCTURES_ARRAY_LIST_H
-#define STRUCTURES_ARRAY_LIST_H
+#ifndef _VIHO_STRUCTURES_ARRAY_LIST_H
+#define _VIHO_STRUCTURES_ARRAY_LIST_H
 
 #include <cstdint>
 #include <memory>
 #include <stdexcept>
 
-#include <traits.h>
 #include <utils.h>
+#include"vihoiterator.h"
 
 namespace VihoStructures {
 
+
+// 	typedef std::reverse_iterator<iterator> reverse_iterator;
+// 	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 /**
  * @使用数组实现列表容器 list(data structure).也就是动态数组 
  *
@@ -31,82 +34,17 @@ public:
 	typedef typename A::difference_type difference_type;
 	typedef typename A::size_type size_type;
 
-	class iterator {
-	public:
-		typedef typename A::difference_type difference_type;
-		typedef typename A::value_type value_type;
-		typedef typename A::reference reference;
-		typedef typename A::pointer pointer;
-		typedef std::random_access_iterator_tag iterator_category; 
-		iterator();
-		iterator(const iterator&);
-		~iterator();
 
-		iterator& operator=(const iterator&);
-		bool operator==(const iterator&) const;
-		bool operator!=(const iterator&) const;
-		bool operator<(const iterator&) const; 
-		bool operator>(const iterator&) const; 
-		bool operator<=(const iterator&) const; 
-		bool operator>=(const iterator&) const; 
+public:
+	using iterator = iterator<T, Capacity>;
+	using const_iterator = iterator<const T, Capacity>;
+	using reverse_iterator = std::reverse_iterator<iterator>;
+	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-		iterator& operator++();
-		iterator operator++(int); 
-		iterator& operator--(); 
-		iterator operator--(int); 
-		iterator& operator+=(size_type); 
-		iterator operator+(size_type) const; 
-		friend iterator operator+(size_type, const iterator&); 
-		iterator& operator-=(size_type);            
-		iterator operator-(size_type) const; 
-		difference_type operator-(iterator) const; 
-
-		reference operator*() const;
-		pointer operator->() const;
-		reference operator[](size_type) const; 
-	};
-	class const_iterator {
-	public:
-		typedef typename A::difference_type difference_type;
-		typedef typename A::value_type value_type;
-		typedef typename const A::reference reference;
-		typedef typename const A::pointer pointer;
-		typedef std::random_access_iterator_tag iterator_category; 
-
-		const_iterator();
-		const_iterator(const const_iterator&);
-		const_iterator(const iterator&);
-		~const_iterator();
-
-		const_iterator& operator=(const const_iterator&);
-		bool operator==(const const_iterator&) const;
-		bool operator!=(const const_iterator&) const;
-		bool operator<(const const_iterator&) const; 
-		bool operator>(const const_iterator&) const; 
-		bool operator<=(const const_iterator&) const; 
-		bool operator>=(const const_iterator&) const; 
-
-		const_iterator& operator++();
-		const_iterator operator++(int); 
-		const_iterator& operator--(); 
-		const_iterator operator--(int); 
-		const_iterator& operator+=(size_type); 
-		const_iterator operator+(size_type) const; 
-		friend const_iterator operator+(size_type, const const_iterator&); 
-		const_iterator& operator-=(size_type);          
-		const_iterator operator-(size_type) const; 
-		difference_type operator-(const_iterator) const; 
-
-		reference operator*() const;
-		pointer operator->() const;
-		reference operator[](size_type) const;
-	};
-
-	typedef std::reverse_iterator<iterator> reverse_iterator; 
-	typedef std::reverse_iterator<const_iterator> const_reverse_iterator; 
 
 
 public:
+	//TODO initialize list constructor
 	ArrayList() = default;
 
 	ArrayList(const ArrayList<T>& other)
