@@ -36,16 +36,29 @@ public:
 
 
 public:
-	using iterator = iterator<T, Capacity>;
-	using const_iterator = iterator<const T, Capacity>;
+	using iterator = iterator<T>;
+	using const_iterator = iterator<const T>;
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-
+// 	using iterator = _Vector_iterator<_Scary_val>;
+// 	using const_iterator = _Vector_const_iterator<_Scary_val>;
+// 	using reverse_iterator = _STD reverse_iterator<iterator>;
+// 	using const_reverse_iterator = _STD reverse_iterator<const_iterator>;
 
 
 public:
 	//TODO initialize list constructor
 	ArrayList() = default;
+
+	ArrayList(std::initializer_list <T>& other) :size_(0), max_size_(0)
+	{
+		for (e : other)
+		{
+			insert(e, size_++);
+		}
+		max_size_ = size_;
+	}
+	
 
 	ArrayList(const ArrayList<T>& other)
 		: contents{copy_array(other.contents, other.size_, other.max_size_)}
@@ -280,6 +293,9 @@ public:
 	T& back() { return contents[size_ - 1]; }
 
 	const T& back() const { return contents[size_ - 1]; }
+
+	public:
+		//begin() end()
 
 private:
 	void expand(float ratio) {
