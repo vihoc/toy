@@ -95,16 +95,32 @@ namespace VihoStructures {
 		typedef T value_type;
 		typedef T& reference;
 		typedef T* pointer;
+		//typedef size_t difference_type;
 		//typedef std::forward_iterator_tag iterator_category;
 		typedef std::random_access_iterator_tag iterator_category;
 		typedef int difference_type;
 		random_iterator(pointer ptr) : ptr_(ptr) { }
 		self_type operator++() { self_type i = *this; ptr_++; return i; }
 		self_type operator++(int junk) { ptr_++; return *this; }
+		self_type operator--() { self_type i = *this; ptr_--; return i; }
+		self_type operator--(int junk) { ptr_--; return *this; }
+		self_type operator+(int junk) { ptr_ += junk; return *this; }
+		self_type operator-(int junk) { ptr_ -=junk; return *this; }
+		difference_type operator-(const self_type junk) { return  ptr_ - junk.ptr_ ; }//TODO检查边界
+		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO检查边界
 		reference operator*() { return *ptr_; }
 		pointer operator->() { return ptr_; }
+		reference operator*() const{ return *ptr_; }
+		pointer operator->() const { return ptr_; }
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
+		bool operator!=(const self_type& rhs) const { return ptr_ != rhs.ptr_; }
+
+		bool operator<(const self_type& rhs) { return ptr_ < rhs.ptr_; }
+		bool operator<(const self_type& rhs) const { return ptr_ < rhs.ptr_; }
+		bool operator>(const self_type& rhs) { return ptr_ > rhs.ptr_; }
+		bool operator>(const self_type& rhs) const { return ptr_ > rhs.ptr_; }
 	private:
 		pointer ptr_;
 	};
@@ -121,10 +137,25 @@ namespace VihoStructures {
 		const_random_iterator(pointer ptr) : ptr_(ptr) { }
 		self_type operator++() { self_type i = *this; ptr_++; return i; }
 		self_type operator++(int junk) { ptr_++; return *this; }
+		self_type operator--() { self_type i = *this; ptr_--; return i; }
+		self_type operator--(int junk) { ptr_--; return *this; }
+		self_type operator+(int junk) { ptr_ += junk; return *this; }
+		self_type operator-(int junk) { ptr_ -= junk; return *this; }
+		difference_type operator-(const self_type junk) { return junk.ptr_ - ptr_; }//TODO检查边界
+		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO检查边界
 		const reference operator*() { return *ptr_; }
 		const pointer operator->() { return ptr_; }
+		const reference operator*() const{ return *ptr_; }
+		const pointer operator->() const{ return ptr_; }
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
+		bool operator!=(const self_type& rhs) const { return ptr_ != rhs.ptr_; }
+
+		bool operator<(const self_type& rhs) { return ptr_ < rhs.ptr_; }
+		bool operator<(const self_type& rhs) const{ return ptr_ < rhs.ptr_; }
+		bool operator>(const self_type& rhs) { return ptr_ > rhs.ptr_; }
+		bool operator>(const self_type& rhs) const{ return ptr_ > rhs.ptr_; }
 	private:
 		pointer ptr_;
 	};
