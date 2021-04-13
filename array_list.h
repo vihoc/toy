@@ -307,14 +307,14 @@ public:
 public:
 		/**
 		 * @stl风格容器支持,与stl相同.故不写注释
-		 *
+		 *TODO noexcept
 		 */
 	iterator begin() { return iterator(&contents[0]); }
 	iterator end() { return iterator(&contents[max_size_]); }
 
 
-	iterator begin() const { return iterator(&contents[0]); }
-	iterator end() const { return iterator(&contents[max_size_]); }
+	const_iterator begin() const { return iterator(&contents[0]); }
+	const_iterator end() const { return iterator(&contents[max_size_]); }
 
 	const_iterator cbegin() { return const_iterator(&contents[0]); }
 	const_iterator cend() { return const_iterator(&contents[max_size_]); }

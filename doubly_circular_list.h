@@ -7,8 +7,8 @@
  */
 
 
-#ifndef STRUCTURES_DOUBLY_CIRCULAR_LIST_H
-#define STRUCTURES_DOUBLY_CIRCULAR_LIST_H
+#ifndef _VIHO_STRUCTURES_DOUBLY_CIRCULAR_LIST_H
+#define _VIHO_STRUCTURES_DOUBLY_CIRCULAR_LIST_H
 
 #include <stdexcept>
 #include <initializer_list>
@@ -328,12 +328,12 @@ public:
  * @stl风格容器支持,与stl相同.故不写注释
  *
  */
-	iterator begin() { return iterator(sentinal->next); }
-	iterator end() { return iterator(sentinal); }
+	iterator begin() noexcept { return iterator(sentinal->next); }
+	iterator end() noexcept  { return iterator(sentinal); }
 
 
-	iterator begin() const { return iterator(sentinal->next); }
-	iterator end() const { return iterator(sentinal); }
+	const_iterator begin() const { return iterator(sentinal->next); }
+	const_iterator end() const { return iterator(sentinal); }
 
 	const_iterator cbegin() { return const_iterator(sentinal->next); }
 	const_iterator cend() { return const_iterator(sentinal); }
@@ -341,8 +341,8 @@ public:
 	reverse_iterator rbegin() { return reverse_iterator(sentinal->prev); }
 	reverse_iterator rend() { return reverse_iterator(sentinal); }
 
-	reverse_iterator rbegin() const { return reverse_iterator(sentinal->prev); }
-	reverse_iterator rend() const { return reverse_iterator(sentinal); }
+	reverse_iterator rcbegin() const { return reverse_iterator(sentinal->prev); }
+	reverse_iterator rcend() const { return reverse_iterator(sentinal); }
 
 	const_reverse_iterator crbegin() { return const_reverse_iterator(sentinal->prev); }
 	const_reverse_iterator crend() { return const_reverse_iterator(sentinal); }

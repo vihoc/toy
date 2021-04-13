@@ -116,6 +116,7 @@ namespace VihoStructures {
 		pointer operator->() { return ptr_; }
 		reference operator*() const{ return *ptr_; }
 		pointer operator->() const { return ptr_; }
+		//TODO untested
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
 		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
@@ -134,7 +135,7 @@ namespace VihoStructures {
 	public:
 		typedef const_random_iterator self_type;
 		typedef T value_type;
-		typedef T& reference;
+		typedef const T& reference;
 		typedef T* pointer;
 		typedef int difference_type;
 		typedef std::random_access_iterator_tag iterator_category;
@@ -147,39 +148,38 @@ namespace VihoStructures {
 		self_type operator-(int junk) { ptr_ -= junk; return *this; }
 		difference_type operator-(const self_type junk) { return junk.ptr_ - ptr_; }//TODO检查边界
 		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO检查边界
-		const reference operator*() { return *ptr_; }
-		const pointer operator->() { return ptr_; }
-		const reference operator*() const{ return *ptr_; }
-		const pointer operator->() const{ return ptr_; }
+		reference operator*() { return *ptr_; }
+		pointer operator->() { return ptr_; }
+		reference operator*() const { return *ptr_; }
+		pointer operator->() const { return ptr_; }
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
 		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) const { return ptr_ != rhs.ptr_; }
 
 		bool operator<(const self_type& rhs) { return ptr_ < rhs.ptr_; }
-		bool operator<(const self_type& rhs) const{ return ptr_ < rhs.ptr_; }
+		bool operator<(const self_type& rhs) const { return ptr_ < rhs.ptr_; }
 		bool operator>(const self_type& rhs) { return ptr_ > rhs.ptr_; }
-		bool operator>(const self_type& rhs) const{ return ptr_ > rhs.ptr_; }
+		bool operator>(const self_type& rhs) const { return ptr_ > rhs.ptr_; }
 	private:
 		pointer ptr_;
 	};
 
 //TODO 改的更清晰
-	//TODO 改回Node,客戶代碼應該以 iter->fucker來訪問Node
 	typedef int size_type;
 	template <typename T>
-	class forward_iterator
+	class bidirectional_iterator
 	{
 	public:
-		typedef forward_iterator self_type;
+		typedef bidirectional_iterator self_type;
 		typedef typename T::value_type value_type;
 		typedef typename T::value_type reference; //使用T::value_refence 会编译错误.
 		typedef T* pointer;
 		typedef size_t difference_type;
 		//typedef std::forward_iterator_tag iterator_category;
-		typedef std::forward_iterator_tag iterator_category;
+		typedef std::bidirectional_iterator_tag iterator_category;
 //		typedef int difference_type;
-		forward_iterator(pointer ptr) : ptr_(ptr) { }
+		bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
 		
 		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
 		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
@@ -203,24 +203,24 @@ namespace VihoStructures {
 		pointer ptr_;
 	};
 	template <typename T>
-	class const_forward_iterator
+	class const_bidirectional_iterator
 	{
 	public:
-		typedef const_forward_iterator self_type;
+		typedef const_bidirectional_iterator self_type;
 		typedef typename T::value_type value_type;
-		typedef typename T::value_type& reference;
-		typedef value_type* pointer;
+		typedef typename T::value_type reference;
+		typedef T* pointer;
 		typedef size_t difference_type;
-		typedef std::forward_iterator_tag iterator_category;
-		const_forward_iterator(pointer ptr) : ptr_(ptr) { }
-		self_type operator++() { self_type i = *this; ptr_++; return i; }
-		self_type operator++(int junk) { ptr_++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_--; return i; }
-		self_type operator--(int junk) { ptr_--; return *this; }
-		const reference operator*() { return *ptr_; }
-		const pointer operator->() { return ptr_; }
-		const reference operator*() const { return *ptr_; }
-		const pointer operator->() const { return ptr_; }
+		typedef std::bidirectional_iterator_tag iterator_category;
+		const_bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
+		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
+		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+		const reference operator*() { return **ptr_; }
+		const pointer operator->() { return *ptr_; }
+		const reference operator*() const { return **ptr_; }
+		const pointer operator->() const { return *ptr_; }
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
 		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
@@ -233,6 +233,76 @@ namespace VihoStructures {
 	private:
 		pointer ptr_;
 	};
+
+
+
+	typedef int size_type;
+	template <typename T>
+	class forward_iterator
+	{
+	public:
+		typedef forward_iterator self_type;
+		typedef typename T::value_type value_type;
+		typedef typename T::value_type reference; //使用T::value_refence 会编译错误.
+		typedef T* pointer;
+		typedef size_t difference_type;
+		//typedef std::forward_iterator_tag iterator_category;
+		typedef std::forward_iterator_tag iterator_category;
+		//		typedef int difference_type;
+		forward_iterator(pointer ptr) : ptr_(ptr) { }
+
+		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
+		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+
+		reference operator*() { return **ptr_; }
+		pointer operator->() { return *ptr_; }
+		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
+		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
+		bool operator!=(const self_type& rhs) const { return ptr_ != rhs.ptr_; }
+
+		bool operator<(const self_type& rhs) { return ptr_ < rhs.ptr_; }
+		bool operator<(const self_type& rhs) const { return ptr_ < rhs.ptr_; }
+		bool operator>(const self_type& rhs) { return ptr_ > rhs.ptr_; }
+		bool operator>(const self_type& rhs) const { return ptr_ > rhs.ptr_; }
+	private:
+		pointer ptr_;
+	};
+	template <typename T>
+	class const_forward_iterator
+	{
+	public:
+		typedef const_forward_iterator self_type;
+		typedef typename T::value_type value_type;
+		typedef typename T::value_type reference;
+		typedef T* pointer;
+		typedef size_t difference_type;
+		typedef std::forward_iterator_tag iterator_category;
+		const_forward_iterator(pointer ptr) : ptr_(ptr) { }
+		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
+		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+
+		reference operator*() { return **ptr_; }
+		pointer operator->() { return *ptr_; }
+		const reference operator*() const { return **ptr_; }
+		const pointer operator->() const { return *ptr_; }
+		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
+		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
+		bool operator!=(const self_type& rhs) const { return ptr_ != rhs.ptr_; }
+
+		bool operator<(const self_type& rhs) { return ptr_ < rhs.ptr_; }
+		bool operator<(const self_type& rhs) const { return ptr_ < rhs.ptr_; }
+		bool operator>(const self_type& rhs) { return ptr_ > rhs.ptr_; }
+		bool operator>(const self_type& rhs) const { return ptr_ > rhs.ptr_; }
+	private:
+		pointer ptr_;
+	};
+
 }
 
 #endif
