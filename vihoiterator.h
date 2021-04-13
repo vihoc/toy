@@ -179,13 +179,21 @@ namespace VihoStructures {
 		//typedef std::forward_iterator_tag iterator_category;
 		typedef std::bidirectional_iterator_tag iterator_category;
 //		typedef int difference_type;
-		bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
-		
+
+		explicit bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
+		bidirectional_iterator(bidirectional_iterator& iter) :ptr_(iter.ptr_) {}
+		bidirectional_iterator(bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
+		//~bidirectional_iterator(){ }
+		//bidirectional_iterator(const bidirectional_iterator&) = default;
 		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
 		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
 		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
-	
+		self_type operator++() const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator++(int junk) const { ptr_ = (*ptr_)++; return *this; }
+		self_type operator--() const{ self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		self_type operator--(int junk) const { ptr_ = (*ptr_)--; return *this; }
+		self_type& operator=(const self_type& other) = default;
 		reference operator*() { return **ptr_; }
 		pointer operator->() { return *ptr_; }
 		const reference operator*() const { return **ptr_; }
@@ -212,11 +220,21 @@ namespace VihoStructures {
 		typedef T* pointer;
 		typedef size_t difference_type;
 		typedef std::bidirectional_iterator_tag iterator_category;
-		const_bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
+		explicit const_bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
+		const_bidirectional_iterator(const_bidirectional_iterator& iter) :ptr_(iter.ptr_) {}
+		const_bidirectional_iterator(const_bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
+		//~bidirectional_iterator() { }
+		//const_bidirectional_iterator(const const_bidirectional_iterator&) = default;
 		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
 		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
 		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+
+		self_type operator++() const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator++(int junk) const { ptr_ = (*ptr_)++; return *this; }
+		self_type operator--() const { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		self_type operator--(int junk) const { ptr_ = (*ptr_)--; return *this; }
+		//self_type& operator=(const self_type& other) = default;
 		const reference operator*() { return **ptr_; }
 		const pointer operator->() { return *ptr_; }
 		const reference operator*() const { return **ptr_; }

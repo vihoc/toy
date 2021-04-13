@@ -33,7 +33,7 @@ public:
 public:
 	using iterator = bidirectional_iterator<Node>;
 	using const_iterator = const_bidirectional_iterator<const Node>;
-	using reverse_iterator = std::reverse_iterator<iterator>;
+	using reverse_iterator = std::reverse_iterator<const iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 public:
@@ -49,7 +49,7 @@ public:
 		{
 			push_back(e);
 		}
-		head->father = this;
+		
 	}
 
 	LinkedList(const LinkedList<T>& other)
@@ -97,7 +97,7 @@ public:
 	 * @參數'data'為要加入鏈表的數據
 	 */
 	void push_front(const T& data) {
-		head = new Node(data, head);
+		head = new Node(data, head, this);
 		++size_;
 	}
 
@@ -117,7 +117,7 @@ public:
 			for (std::size_t i = 0; i < index - 1; ++i) {
 				it = it->next;
 			}
-			it->next = new Node(data, it->next);
+			it->next = new Node(data, it->next, this);
 
 			++size_;
 		}
@@ -136,7 +136,7 @@ public:
 			while (it->next != nullptr && data > it->next->data) {
 				it = it->next;
 			}
-			it->next = new Node(data, it->next);
+			it->next = new Node(data, it->next, this);
 
 			++size_;
 		}
@@ -317,32 +317,37 @@ public:
 		const_iterator cend() const { return const_iterator(nullptr); }
 
 		reverse_iterator rbegin() { iterator iter = begin();  std::advance(iter, size_); return reverse_iterator(iter); }
-		reverse_iterator rend() { return reverse_iterator(nullptr); }
+		reverse_iterator rend() { return reverse_iterator(iterator(nullptr)); }
 
-		reverse_iterator rcbegin() const { iterator iter = begin();  std::advance(iter, size_); return reverse_iterator(iter); }
-		reverse_iterator rcend() const { return reverse_iterator(nullptr); }
+		reverse_iterator rcbegin() const { iterator iter = begin();  std::advance(iter, size_); return const_reverse_iterator(iter); }
+		reverse_iterator rcend() const { return const_reverse_iterator(const_iterator(nullptr)); }
 
-		const_reverse_iterator crbegin() const{ iterator iter = begin();  std::advance(iter, size_); return reverse_iterator(iter); }
-		const_reverse_iterator crend() const { return const_reverse_iterator(nullptr); }
+		const_reverse_iterator crbegin() const{ iterator iter = begin();  std::advance(iter, size_); return const_reverse_iterator(iter); }
+		const_reverse_iterator crend() const { return const_reverse_iterator(const_iterator(nullptr)); }
 
 private:
-	using List = typename template<T> LinkedList*;
- 	struct Node {
-		explicit Node(const T& data) : data{data} {}
-		Node(const T& data, Node* next) : data{data}, next{next} {}
-		List* father(nullptr);
+	using List =  LinkedList<T>;
+	struct Node {
+		explicit Node(const T& data) : data{ data }, list{nullptr} {}
+		Node(const T& data, const List& listref) : data{ data }, list{ listref } {}
+		Node(const T& data, Node* next, const List* listref) : data{ data }, next{ next }, list{listref}{}
+		/*
+		*臨時解決方式,存放鏈表指針獲取begin
+		* stl為保存了prev_
+		*/
+		const List* list;
 		T data;
 		Node* next{nullptr};
 	public:
-		Node* operator--() { difference_type diff = std::distance(begin(), const_bidirectional_iterator(*this)); /*檢查diff*/const_bidirectional_iterator iter = std::advance(begin(), diff - 1); return iter; }
-		Node* operator--(int junk) { difference_type diff = std::distance(begin(), const_bidirectional_iterator(*this)); /*檢查diff*/const_bidirectional_iterator iter = std::advance(begin(), diff - 1); return iter; }
+		Node* operator--() { difference_type diff = std::distance(list->begin(), iterator(this)); /*檢查diff*/iterator iter = std::advance(list->begin(), diff - 1); return iter; }
+		Node* operator--(int junk) { difference_type diff = std::distance(list->begin(), iterator(this)); /*檢查diff*/iterator iter = std::advance(list->begin(), diff - 1); return iter; }
 
-		Node* operator--() const { difference_type diff = std::distance(begin(), const_bidirectional_iterator(*this)); /*檢查diff*/const_bidirectional_iterator iter = std::advance(begin(), diff - 1); return iter; }
-		Node* operator--(int junk) const { difference_type diff = std::distance(begin(), const_bidirectional_iterator(*this)); /*檢查diff*/const_bidirectional_iterator iter = std::advance(begin(), diff - 1); return iter; }
+		Node* operator--() const { difference_type diff = std::distance(list->begin(), const_iterator(&this)); /*檢查diff*/const_iterator iter = std::advance(list->begin(), diff - 1); return iter; }
+		Node* operator--(int junk) const { difference_type diff = std::distance(list->begin(), const_iterator(&this)); /*檢查diff*/const_iterator iter = std::advance(list->begin(), diff - 1); return iter; }
 
 		Node* operator++() { return this->next; }
 		Node* operator++(int junk) { return this->next; }
-
+		//Node* operator=(const Node* other) { std::swap(this, other); };
 		Node* operator++() const { return this->next; }
 		Node* operator++(int junk) const { return this->next; }
 		const T& operator*() const { return this->data; }

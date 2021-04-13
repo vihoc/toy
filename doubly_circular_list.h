@@ -185,7 +185,7 @@ public:
 	iterator erase(iterator pos)
 	{
 		difference_type diff = std::distance(begin(), pos);
-		if(size_ < static_cast<int>(diff))	throw std::out_of_range("Index out of bounds (erase by iterator pos())");
+		if(size_ < static_cast<size_t>(diff))	throw std::out_of_range("Index out of bounds (erase by iterator pos())");
 		erase(diff);
 		iterator iter = begin();
 		std::advance(iter, diff);
