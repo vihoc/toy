@@ -11,6 +11,10 @@ author: vihoc
 #include <stdexcept>
 
 #include <utils.h>
+
+#include <iostream>
+
+#include <initializer_list>
 #include"vihoiterator.h"
 
 namespace VihoStructures {
@@ -27,17 +31,16 @@ template <class T, class A = std::allocator<T>>
 class ArrayList {
 
 public:
-	typedef A allocator_type;
-	typedef typename A::value_type value_type;
-	typedef typename A::reference reference;
-	typedef typename A::const_reference const_reference;
-	typedef typename A::difference_type difference_type;
-	typedef typename A::size_type size_type;
-
+	typedef std::allocator_traits<A> allocator_type;
+	typedef typename std::allocator_traits<A>::value_type value_type;
+	//typedef typename std::allocator_traits<A>::reference reference;
+//	typedef typename std::allocator_traits<A>::const_reference const_reference;
+	typedef typename std::allocator_traits<A>::difference_type difference_type;
+	typedef typename std::allocator_traits<A>::size_type size_type;
 
 public:
-	using iterator = iterator<T>;
-	using const_iterator = iterator<const T>;
+	using iterator = random_iterator<T>;
+	using const_iterator = const_random_iterator<const T>;
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 // 	using iterator = _Vector_iterator<_Scary_val>;
@@ -47,16 +50,25 @@ public:
 
 
 public:
-	//TODO initialize list constructor
+	
 	ArrayList() = default;
 
-	ArrayList(std::initializer_list <T>& other) :size_(0), max_size_(0)
+/**
+ * @构造函数, 支持C++11风格的initializer_list初始化
+ *
+ * @参数:initializer_list.如为ArrayList<int>的话,则像{1 ,2, 3, 4}这样写即可.
+ * 举例: ArrayList<int> test = {1, 2, 3, 4}; 初始化4个元素的数组.
+ */
+	ArrayList(std::initializer_list <T>&& other) :size_(0), max_size_(0)
 	{
-		for (e : other)
+
+		for (auto& e : other)
 		{
-			insert(e, size_++);
+			insert(e, size_);
 		}
 		max_size_ = size_;
+
+
 	}
 	
 
@@ -111,14 +123,6 @@ public:
 	 */
 	void push_back(const T& data) { insert(data, size_); }
 
-
-	//
-
-		//emplace
-		//emplace_back
-	//begin
-	//end iterator
-	//
 
 	/**
 	 * @ 添加'data' 到数组开头
@@ -294,8 +298,22 @@ public:
 
 	const T& back() const { return contents[size_ - 1]; }
 
-	public:
-		//begin() end()
+public:
+		/**
+		 * @stl风格容器支持,与stl相同.故不写注释
+		 *
+		 */
+	iterator begin() { return iterator(&contents[0]); }
+	iterator end() { return iterator(&contents[max_size_]); }
+
+	const_iterator cbegin() { return const_iterator(&contents[0]); }
+	const_iterator cend() { return const_iterator(&contents[max_size_]); }
+
+	reverse_iterator rbegin() { return reverse_iterator(&contents[max_size_ - 1]); }
+	reverse_iterator rend() { return reverse_iterator(&contents[-1]); }
+
+	const_reverse_iterator crbegin() { return const_reverse_iterator(&contents[max_size_ - 1]); }
+	const_reverse_iterator crend() { return const_reverse_iterator(&contents[-1]); }
 
 private:
 	void expand(float ratio) {
@@ -313,6 +331,14 @@ private:
 		return copy;
 	}
 
+	void print()
+	{
+		std::cout << "=======print=====" << std::endl;
+		std::cout << "size_: " << size_ << "     max: " << max_size_ << std::endl;
+		for (std::size_t i = 0; i < size_; ++i)
+			std::cout << "pos:" << i << "     content" << this->at(i) << std::endl;
+		std::cout << "=======end======" << std::endl;
+	}
 	const static std::size_t starting_size{8};
 
 	std::unique_ptr<T[]> contents = make_unique<T[]>(starting_size);
@@ -324,10 +350,10 @@ private:
 
 /* list trait */
 template <>
-const bool traits::is_list<structures::ArrayList>::value = true;
+const bool traits::is_list<VihoStructures::ArrayList>::value = true;
 
 /* name trait */
 template <>
-const std::string traits::type<structures::ArrayList>::name = "ArrayList";
+const std::string traits::type<VihoStructures::ArrayList>::name = "ArrayList";
 
 #endif
