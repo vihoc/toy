@@ -20,8 +20,7 @@ author: vihoc
 namespace VihoStructures {
 
 
-// 	typedef std::reverse_iterator<iterator> reverse_iterator;
-// 	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+// 	typedef std::reverse_iterat
 /**
  * @使用数组实现列表容器 list(data structure).也就是动态数组 
  *
@@ -32,11 +31,11 @@ class ArrayList {
 
 public:
 	typedef std::allocator_traits<A> allocator_type;
-	typedef typename std::allocator_traits<A>::value_type value_type;
+	typedef typename allocator_type::value_type value_type;
 	//typedef typename std::allocator_traits<A>::reference reference;
 //	typedef typename std::allocator_traits<A>::const_reference const_reference;
-	typedef typename std::allocator_traits<A>::difference_type difference_type;
-	typedef typename std::allocator_traits<A>::size_type size_type;
+	typedef typename allocator_type::difference_type difference_type;
+	typedef typename allocator_type::size_type size_type;
 
 public:
 	using iterator = random_iterator<T>;
@@ -61,14 +60,11 @@ public:
  */
 	ArrayList(std::initializer_list <T>&& other) :size_(0), max_size_(0)
 	{
-
 		for (auto& e : other)
 		{
 			insert(e, size_);
 		}
 		max_size_ = size_;
-
-
 	}
 	
 
@@ -163,7 +159,7 @@ public:
 			i++;
 		insert(data, i);
 	}
-
+	//TODO,issorted函数
 	/**
 	 * @在给定位置删除元素
 	 *
@@ -189,6 +185,16 @@ public:
 
 			return deleted;
 		}
+	}
+	//TODO 添加iterator版的earse
+	//iterator
+	iterator erase(iterator index)
+	{
+		//bound check
+		difference_type diff = index - begin();
+		erase(static_cast<size_t>(diff));
+		return begin() + diff;
+
 	}
 
 	/**
