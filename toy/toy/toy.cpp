@@ -1,5 +1,7 @@
 // toy.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+//#define _DEBUG
+#include "crtdbg.h"
 
 #include <iostream>
 #include"array_list.h"
@@ -8,8 +10,10 @@
 #include <list>
 #include"doubly_circular_list.h"
 #include"linked_list.h"
+
 int main()
 {
+   // _CrtSetDbgFlag(true);
     std::cout << "Hello World!\n";
     VihoStructures::ArrayList<int> test = {5, 1, 2, 3, 4, 4, 3, 2, 1, 5};
     for (auto i : test)
@@ -61,13 +65,13 @@ int main()
 	}
 
 	std::cout << "====test reverse LinkedListIter" << std::endl;
-// 	for (auto iter = testlist.rbegin(); iter != testlist.rend(); x++, iter++)
-// 	{
-// 		//      auto a = iter;
-// 
-// 
-// 		std::cout << *iter << std::endl;
-// 	}
+	for (auto iter = testlist.rbegin(); iter != testlist.rend(); x++, iter++)
+	{
+		//      auto a = iter;
+
+
+		std::cout << *iter << std::endl;
+	}
     return 0;
 }
 

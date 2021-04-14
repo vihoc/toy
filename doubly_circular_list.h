@@ -76,7 +76,7 @@ public:
 		return *this;
 	}
 
-	~DoublyCircularList() { clear(); }
+	~DoublyCircularList() { clear(); delete sentinal; sentinal = nullptr; }
 
 	/**
 	 * @Çå¿ÕÁ´±í

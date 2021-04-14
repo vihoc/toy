@@ -58,13 +58,13 @@ public:
  * @参数:initializer_list.如为ArrayList<int>的话,则像{1 ,2, 3, 4}这样写即可.
  * 举例: ArrayList<int> test = {1, 2, 3, 4}; 初始化4个元素的数组.
  */
-	ArrayList(std::initializer_list <T>&& other) :size_(0), max_size_(0)
+	ArrayList(std::initializer_list <T>&& other) : size_(0), max_size_(other.size() + 1)
 	{
+		contents = std::make_unique<T[]>(max_size_);
 		for (auto& e : other)
 		{
 			insert(e, size_);
 		}
-		max_size_ = size_;
 	}
 	
 
