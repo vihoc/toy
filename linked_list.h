@@ -192,6 +192,23 @@ public:
 		}
 	}
 
+	/***
+	*
+	* iterator版earse
+	*/
+	iterator earse(iterator iter)
+	{
+		difference_type diff = distance(begin(), iter);
+		if (diff >= size_)
+		{
+			throw std::out_of_range("Index out of bounds(iterator erase)");
+		}
+		erase(diff);
+		auto newIter = begin();
+		advance(newIter, diff);
+		return newIter;
+
+	}
 	/**
 	 * @彈出列表尾部節點(被刪除)
 	 *
