@@ -1,6 +1,6 @@
 /**
 *
-*»ùì¶”µ½MŒ¬F—£, ½Ó¿ÚÍ¬stl
+*åŸºæ–¼æ•¸çµ„å¯¦ç¾æ£§, æ¥å£åŒstl
 *
 *author: vihoc
 */
@@ -32,7 +32,7 @@ private:
 template <typename T>
 class Stack : public StackWrapper<T, ArrayList<T>> {};
 
-}  // namespace structures
+}  // namespace VihoStructures
 
 /* name trait */
 template <>

@@ -1,5 +1,5 @@
-/**
-»ùÓÚC++1†Îæœ±í , Ö§³Östd·½Ê½±à³Ì.
+ï»¿/**
+åŸºäºC++1å–®éˆè¡¨ , æ”¯æŒstdæ–¹å¼ç¼–ç¨‹.
 author: vihoc
 */
 #ifndef _VIHO_STRUCTURES_LINKED_LIST_H
@@ -14,11 +14,11 @@ author: vihoc
 namespace VihoStructures {
 
 /**
- * @†Îæœ±í”µ“ş½Y˜‹Œ¬F
- * @Ã¿‚€ÔªËØ´æƒ¦Ò»‚€Ö¸á˜,æœ±íÎ²²¿nextÖ¸Ïònullptr
+ * @å–®éˆè¡¨æ•¸æ“šçµæ§‹å¯¦ç¾
+ * @æ¯å€‹å…ƒç´ å­˜å„²ä¸€å€‹æŒ‡é‡,éˆè¡¨å°¾éƒ¨nextæŒ‡å‘nullptr
  * 
  *
- * @Ä£°å…¢”µTé±£´æµÄ”µ“şÖĞîĞÍ
+ * @æ¨¡æ¿åƒæ•¸Tç‚ºä¿å­˜çš„æ•¸æ“šä¸­é¡å‹
  */
 template <typename T, class A = std::allocator<T>>
 class LinkedList {
@@ -27,7 +27,7 @@ public:
 	typedef std::allocator_traits<A> allocator_type;
 	typedef typename allocator_type::value_type value_type;
 	//typedef typename std::allocator_traits<A>::reference reference;
-//	typedef typename std::allocator_traits<A>::const_reference const_reference;
+	//	typedef typename std::allocator_traits<A>::const_reference const_reference;
 	typedef typename allocator_type::difference_type difference_type;
 	typedef typename allocator_type::size_type size_type;
 
@@ -40,8 +40,8 @@ public:
 public:
 	LinkedList() = default;
 /**
- * @¹¹Ôìº¯Êı
- * @ÔÊĞíÊ¹ÓÃ³õÊ¼»¯ÁĞ±í¹¹ÔìÁ´±í
+ * @æ„é€ å‡½æ•°
+ * @å…è®¸ä½¿ç”¨åˆå§‹åŒ–åˆ—è¡¨æ„é€ é“¾è¡¨
  */
 
 	LinkedList(std::initializer_list <T>&& other)
@@ -78,7 +78,7 @@ public:
 	virtual ~LinkedList() { clear(); }
 
 	/**
-	 * @Çå¿ÕÁĞ±í
+	 * @æ¸…ç©ºåˆ—è¡¨
 	 */
 	void clear() {
 		//std::cout << "==============delete=====" <<std::endl;
@@ -89,16 +89,16 @@ public:
 	}
 
 	/**
-	 * @Ïòæœ±íÎ²²¿Ìí¼ÓŒ¦Ïó
+	 * @å‘éˆè¡¨å°¾éƒ¨æ·»åŠ å°è±¡
 	 *
-	 * @…¢”µ:'data' •ş±»Ìí¼Óµ½æœ±íÎ²²¿
+	 * @åƒæ•¸:'data' æœƒè¢«æ·»åŠ åˆ°éˆè¡¨å°¾éƒ¨
 	 */
 	void push_back(const T& data) { insert(data, size_); }
 
 	/**
-	 * @Ïòæœ±íÌí¼ÓÔªËØ
+	 * @å‘éˆè¡¨æ·»åŠ å…ƒç´ 
 	 *
-	 * @…¢”µ'data'éÒª¼ÓÈëæœ±íµÄ”µ“ş
+	 * @åƒæ•¸'data'ç‚ºè¦åŠ å…¥éˆè¡¨çš„æ•¸æ“š
 	 */
 	void push_front(const T& data) {
 		head = new Node(data, head, this);
@@ -106,10 +106,10 @@ public:
 	}
 
 	/**
-	 * @ÏòÖ¸¶¨Î»ÖÃ²åÈë”µ“ş
+	 * @å‘æŒ‡å®šä½ç½®æ’å…¥æ•¸æ“š
 	 *
-	 * @…¢”µ:'data' éÒª²åÈëæœ±íµÄŒ¦Ïó
-	 * @…¢”µ:'index'édataÒª²åÈëµÄÎ»ÖÃ
+	 * @åƒæ•¸:'data' ç‚ºè¦æ’å…¥éˆè¡¨çš„å°è±¡
+	 * @åƒæ•¸:'index'ç‚ºdataè¦æ’å…¥çš„ä½ç½®
 	 */
 	void insert(const T& data, std::size_t index) {
 		if (index == 0) {
@@ -128,9 +128,9 @@ public:
 	}
 
 	/**
-	 * @ÏòÒÑÅÅĞòµÄ”µ“şµÄ”µ½M²åÈë”µ“ş
+	 * @å‘å·²æ’åºçš„æ•¸æ“šçš„æ•¸çµ„æ’å…¥æ•¸æ“š
 	 *
-	 * @…¢”µ'data'•ş±»°´”µ“şÒÑÓĞí˜Ğò²åÈë
+	 * @åƒæ•¸'data'æœƒè¢«æŒ‰æ•¸æ“šå·²æœ‰é †åºæ’å…¥
 	 */
 	void insert_sorted(const T& data) {
 		if (empty() || data <= head->data) {
@@ -147,10 +147,10 @@ public:
 	}
 
 	/**
-	 * @Ìá¹©ÏÂ±íÔL†–æœ±í
-	 * @…¢”µ:'index' é±»ÔL†–µÄÏÂ±í
+	 * @æä¾›ä¸‹è¡¨è¨ªå•éˆè¡¨
+	 * @åƒæ•¸:'index' ç‚ºè¢«è¨ªå•çš„ä¸‹è¡¨
 	 *
-	 * @·µ»ØindexÎ»ÖÃ´æƒ¦µÄÖµ.
+	 * @è¿”å›indexä½ç½®å­˜å„²çš„å€¼.
 	 */
 	T& at(std::size_t index) {
 		return const_cast<T&>(static_cast<const LinkedList*>(this)->at(index));
@@ -169,11 +169,11 @@ public:
 	}
 
 	/**
-	 * @Äæœ±íÖĞÒÆ³ıÔªËØ
+	 * @å¾éˆè¡¨ä¸­ç§»é™¤å…ƒç´ 
 	 *
-	 * @…¢”µ:'index'é±»„h³ıµÄÔªËØ
+	 * @åƒæ•¸:'index'ç‚ºè¢«åˆªé™¤çš„å…ƒç´ 
 	 *
-	 * @·µ»ØÖµ:±»„h³ıµÄÔªËØ
+	 * @è¿”å›å€¼:è¢«åˆªé™¤çš„å…ƒç´ 
 	 */
 	T erase(std::size_t index) {
 		if (index >= size_) {
@@ -198,7 +198,7 @@ public:
 
 	/***
 	*
-	* iterator°æearse
+	* iteratorç‰ˆearse
 	*/
 	iterator earse(iterator iter)
 	{
@@ -214,15 +214,15 @@ public:
 
 	}
 	/**
-	 * @—³öÁĞ±íÎ²²¿¹üc(±»„h³ı)
+	 * @å½ˆå‡ºåˆ—è¡¨å°¾éƒ¨ç¯€é»(è¢«åˆªé™¤)
 	 *
-	 * @·µ»ØÖµ: ·µ»Ø±»„h³ıµÄÔªËØ
+	 * @è¿”å›å€¼: è¿”å›è¢«åˆªé™¤çš„å…ƒç´ 
 	 */
 	T pop_back() { return erase(size_ - 1); }
 
 	/**
-	 * @„h³ıÁĞ±íî^²¿¹üc
-	 *·µ»Ø±»„h³ıµÄ¹ücÖµ
+	 * @åˆªé™¤åˆ—è¡¨é ­éƒ¨ç¯€é»
+	 *è¿”å›è¢«åˆªé™¤çš„ç¯€é»å€¼
 	 */
 	T pop_front() {
 		if (empty()) {
@@ -239,9 +239,9 @@ public:
 	}
 
 	/**
-	 * @„h³ıæœ±íÖĞÔªËØ,
+	 * @åˆªé™¤éˆè¡¨ä¸­å…ƒç´ ,
 	 *
-	 * @…¢”µ:'data'·µ»Ø±»„h³ıµÄÖµ
+	 * @åƒæ•¸:'data'è¿”å›è¢«åˆªé™¤çš„å€¼
 	 */
 	void remove(const T& data) {
 		if (head->data == data) {
@@ -263,27 +263,27 @@ public:
 	}
 
 	/**
-	 * @™z²éæœ±íÊÇ·ñé¿Õ
+	 * @æª¢æŸ¥éˆè¡¨æ˜¯å¦ç‚ºç©º
 	 *
-	 * @ ‘¿Õ·µ»Øtrue
+	 * @çˆ²ç©ºè¿”å›true
 	 */
 	bool empty() const { return size_ == 0; }
 
 	/**
-	 * @²éÕÒÊÇ·ñÓĞÄ³ÔªËØ
+	 * @æŸ¥æ‰¾æ˜¯å¦æœ‰æŸå…ƒç´ 
 	 *
-	 * @…¢”µ:'data'ÊÇĞèÒª²éÕÒµÄÖµ
+	 * @åƒæ•¸:'data'æ˜¯éœ€è¦æŸ¥æ‰¾çš„å€¼
 	 *
-	 * @Èç¹ûÕÒµ½·µ»Øtrue
+	 * @å¦‚æœæ‰¾åˆ°è¿”å›true
 	 */
 	bool contains(const T& data) const { return find(data) != size_; }
 
 	/**
-	 * @²éÕÒÔªËØ,·µ»ØÆäÔÚæœ±íÖĞµÄÎ»ÖÃ
+	 * @æŸ¥æ‰¾å…ƒç´ ,è¿”å›å…¶åœ¨éˆè¡¨ä¸­çš„ä½ç½®
 	 *
-	 * @…¢”µ:'data'±»²éÕÒµÄÔªËØ
+	 * @åƒæ•¸:'data'è¢«æŸ¥æ‰¾çš„å…ƒç´ 
 	 *
-	 * @·µ»ØÆäÔÚæœ±íÖĞµÄÎ»ÖÃ
+	 * @è¿”å›å…¶åœ¨éˆè¡¨ä¸­çš„ä½ç½®
 	 */
 	std::size_t find(const T& data) const {
 		std::size_t index = 0;
@@ -296,9 +296,9 @@ public:
 	}
 
 	/**
-	 * @«@È¡æœ±íéL¶È
+	 * @ç²å–éˆè¡¨é•·åº¦
 	 *
-	 * @·µ»ØÖµ:éL¶È
+	 * @è¿”å›å€¼:é•·åº¦
 	 */
 	std::size_t size() const { return size_; }
 
@@ -323,11 +323,13 @@ public:
 	}
 
 
-	public:
+
+
+public:
 		/**
-		 * @stl·ç¸ñÈİÆ÷Ö§³Ö,ÓëstlÏàÍ¬.¹Ê²»Ğ´×¢ÊÍ
-		 *
-		 */
+		* @stlé£æ ¼å®¹å™¨æ”¯æŒ,ä¸stlç›¸åŒ.æ•…ä¸å†™æ³¨é‡Š
+		*
+		*/
 		iterator begin() noexcept { return iterator(head); }
 		iterator end() noexcept { return iterator(nullptr); }
 
@@ -338,39 +340,42 @@ public:
 		const_iterator cbegin() const { return const_iterator(head); }
 		const_iterator cend() const { return const_iterator(nullptr); }
 
-		reverse_iterator rbegin() { iterator iter = begin();  std::advance(iter, size_ -1); return reverse_iterator(iter); }
+		reverse_iterator rbegin() { iterator iter = begin();  std::advance(iter, size_ - 1); return reverse_iterator(iter); }
 		reverse_iterator rend() { return reverse_iterator(iterator(nullptr)); }
 
 		reverse_iterator rcbegin() const { iterator iter = begin();  std::advance(iter, size_ - 1); return const_reverse_iterator(iter); }
 		reverse_iterator rcend() const { return const_reverse_iterator(const_iterator(nullptr)); }
 
-		const_reverse_iterator crbegin() const{ iterator iter = begin();  std::advance(iter, size_ - 1); return const_reverse_iterator(iter); }
+		const_reverse_iterator crbegin() const { iterator iter = begin();  std::advance(iter, size_ - 1); return const_reverse_iterator(iter); }
 		const_reverse_iterator crend() const { return const_reverse_iterator(const_iterator(nullptr)); }
 
+
 private:
-	using List =  LinkedList<T>;
+		using List =  LinkedList<T>;
 	struct Node {
 		explicit Node(const T& data) : data{ data }, list{nullptr} {}
 		Node(const T& data, List* listref) : data{ data }, list{ listref } {}
 		Node(const T& data, Node* next, List* listref) : data{ data }, next{ next }, list{listref}{}
 		~Node() { list = nullptr; };
 		/*
-		*ÅR•r½â›Q·½Ê½,´æ·Åæœ±íÖ¸á˜«@È¡begin
-		* stlé±£´æÁËprev_
+		* è‡¨æ™‚è§£æ±ºæ–¹å¼,å­˜æ”¾éˆè¡¨æŒ‡é‡ç²å–begin
+		* stlå¯¦ç¾æ˜¯ä¿å­˜äº†prev_,å› çˆ²æˆ‘å·²ç¶“å¯¦ç¾äº†é›™å‘éˆè¡¨.æ•…ä½¿ç”¨æ­¤æ–¹å¼
+		* é™¤äº†å‰µå»ºç¯€é»è«‹ä¸è¦å†ä»»ä½•åœ°æ–¹ä¿®æ”¹,ä¹Ÿä¸èƒ½åŠ ä¸Šconst(èœ)
 		*/
-		/*const*/List* list; //³ıÁË„“½¨¹ücÕˆ²»ÒªÔÙÈÎºÎµØ·½ĞŞ¸Ä,Ò²²»ÄÜ¼ÓÉÏconst(²Ë)
+		/*const*/List* list; 
+
+
 		T data;
 		Node* next{nullptr};
 	public:
-		Node* operator--() { difference_type diff = std::distance(list->begin(), iterator(this)); /*™z²édiff*/iterator iter = list->begin(); iter = advance(iter, diff - 1); return  const_cast<Node*>(iter->getPtr());; }/*return const_cast<Node*>(iter.getiterptr()); */
-		Node* operator--(int junk) { difference_type diff = std::distance(list->begin(), iterator(this)); /*™z²édiff*/iterator iter = list->begin(); iter = advance(iter, diff - 1);  return  const_cast<Node*>(iter->getPtr());; }
+		Node* operator--() { difference_type diff = std::distance(list->begin(), iterator(this)); iterator iter = list->begin(); iter = advance(iter, diff - 1); return  const_cast<Node*>(iter->getPtr());; }/*return const_cast<Node*>(iter.getiterptr()); */
+		Node* operator--(int junk) { difference_type diff = std::distance(list->begin(), iterator(this)); iterator iter = list->begin(); iter = advance(iter, diff - 1);  return  const_cast<Node*>(iter->getPtr());; }
 
-		Node* operator--() const { difference_type diff = std::distance(list->begin(), const_iterator(&this)); /*™z²édiff*/const_iterator iter = list->begin(); iter = advance(iter, diff - 1);  return const_cast<Node*>(iter.getPtr()); }
-		Node* operator--(int junk) const { difference_type diff = std::distance(list->begin(), const_iterator(&this)); /*™z²édiff*/const_iterator iter = list->begin(); iter = advance(iter, diff - 1);  return const_cast<Node*>(iter.getPtr()); }
+		Node* operator--() const { difference_type diff = std::distance(list->begin(), const_iterator(&this)); const_iterator iter = list->begin(); iter = advance(iter, diff - 1);  return const_cast<Node*>(iter.getPtr()); }
+		Node* operator--(int junk) const { difference_type diff = std::distance(list->begin(), const_iterator(&this)); const_iterator iter = list->begin(); iter = advance(iter, diff - 1);  return const_cast<Node*>(iter.getPtr()); }
 
 		Node* operator++() { return this->next; }
 		Node* operator++(int junk) { return this->next; }
-		//Node* operator=(const Node* other) { std::swap(this, other); };
 		Node* operator++() const { return this->next; }
 		Node* operator++(int junk) const { return this->next; }
 		const T& operator*() const { return this->data; }
@@ -406,7 +411,7 @@ private:
 	std::size_t size_{0u};
 };
 
-}  // namespace structures
+}  // namespace VihoStructures
 
 /* list trait */
 template <>

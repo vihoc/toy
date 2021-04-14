@@ -1,4 +1,4 @@
-/**
+﻿/**
 基于C++11动态数组 , 支持std方式编程.
 author: vihoc
 */
@@ -81,7 +81,8 @@ public:
 		other.max_size_ = 0;
 	}
 
-	ArrayList<T>& operator=(const ArrayList<T>& other) {
+	ArrayList<T>& operator=(const ArrayList<T>& other)
+	{
 		ArrayList<T> copy{other};
 		std::swap(contents, copy.contents);
 		std::swap(size_, copy.size_);
@@ -89,7 +90,8 @@ public:
 		return *this;
 	}
 
-	ArrayList<T>& operator=(ArrayList<T>&& other) {
+	ArrayList<T>& operator=(ArrayList<T>&& other) 
+	{
 		ArrayList<T> copy{std::move(other)};
 		std::swap(contents, copy.contents);
 		std::swap(size_, copy.size_);
@@ -133,7 +135,8 @@ public:
 	 * @参数:data 会被插入到数组内.
 	 * @参数:index, 插入data的位置 
 	 */
-	void insert(const T& data, std::size_t index) {
+	void insert(const T& data, std::size_t index) 
+	{
 		if (index > size_) {
 			throw std::out_of_range("Index out of bounds");
 		} else {
@@ -153,7 +156,8 @@ public:
 	 *
 	 * @参数'data' 会被插入到满足数组元素本来顺序相应的位置.
 	 */
-	void insert_sorted(const T& data) {
+	void insert_sorted(const T& data) 
+	{
 		std::size_t i = 0;
 		while (i < size_ && data >= contents[i])
 			i++;
@@ -168,7 +172,8 @@ public:
 	 * @返回值: 被删除的值
 	 * TODO:std::move
 	 */
-	T erase(std::size_t index) {
+	T erase(std::size_t index) 
+	{
 		if (empty()) {
 			throw std::out_of_range("List is empty");
 		} else if (index >= size_) {
@@ -269,11 +274,13 @@ public:
 	 *
 	 * @返回值:如果下标有值,返回此位置值的引用
 	 */
-	T& at(std::size_t index) {
+	T& at(std::size_t index)
+	{
 		return const_cast<T&>(static_cast<const ArrayList*>(this)->at(index));
 	}
 
-	const T& at(std::size_t index) const {
+	const T& at(std::size_t index) const 
+	{
 		if (index >= size_) {
 			throw std::out_of_range("Index out of bounds");
 		} else {
@@ -289,7 +296,8 @@ public:
 	 *
 	 * @返回值:如果下标有值,返回此位置值的引用
 	 */
-	T& operator[](std::size_t index) {
+	T& operator[](std::size_t index)
+	{
 		return const_cast<T&>(
 			static_cast<const ArrayList*>(this)->operator[](index));
 	}
@@ -359,7 +367,7 @@ private:
 	std::size_t max_size_{starting_size};
 };
 
-}  // namespace structures
+}  // namespace VihoStructures
 
 /* list trait */
 template <>

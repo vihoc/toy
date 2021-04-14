@@ -1,5 +1,5 @@
 /**
-*Ê¹ÓÃÑ­­hæœ±íŒ¬FµÄê ÁĞ,½Ó¿ÚÍ¬stl
+*ä½¿ç”¨å¾ªç’°éˆè¡¨å¯¦ç¾çš„éšŠåˆ—,æ¥å£åŒstl
 *author: vihoc
 */
 
@@ -32,7 +32,8 @@ private:
 template <typename T>
 class Queue : public QueueWrapper<T, DoublyCircularList<T>> {};
 
-}  // namespace structures
+}  // namespace VihoStructures
+}  // namespace VihoStructures
 
 /* name trait */
 template <>

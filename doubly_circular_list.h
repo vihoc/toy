@@ -1,7 +1,7 @@
-/**
- * @§ÉÚ±øµÄË«ÏòÁ´±íÊµÏÖ Ö§³ÖC++ stlïL¸ñ¾³Ì
- * @Ä£°å²ÎÊıTÎª´æ´¢¶ÔÏóµÄÀàĞÍ
- * @ÉÚ±ø¹üc³ıÁËÔÚÉÙ”µº¯”µÄÚ•ş×ƒ„ÓÍâ,Õˆ²»ÒªëS±ãĞŞ¸Ä
+ï»¿/**
+ * @å¸¶å“¨å…µçš„åŒå‘é“¾è¡¨å®ç° æ”¯æŒC++ stlé¢¨æ ¼ç·¨ç¨‹
+ * @æ¨¡æ¿å‚æ•°Tä¸ºå­˜å‚¨å¯¹è±¡çš„ç±»å‹
+ * @å“¨å…µç¯€é»é™¤äº†åœ¨å°‘æ•¸å‡½æ•¸å†…æœƒè®Šå‹•å¤–,è«‹ä¸è¦éš¨ä¾¿ä¿®æ”¹
  * 
  * @author:vihoc 
  */
@@ -38,8 +38,8 @@ public:
 	DoublyCircularList() = default;
 
 /**
- * @¹¹Ôìº¯Êı
- * @ÔÊĞíÊ¹ÓÃ³õÊ¼»¯ÁĞ±í¹¹ÔìÁ´±í
+ * @æ„é€ å‡½æ•°
+ * @å…è®¸ä½¿ç”¨åˆå§‹åŒ–åˆ—è¡¨æ„é€ é“¾è¡¨
  */
 	
 	DoublyCircularList(std::initializer_list <T>&& other)
@@ -79,7 +79,7 @@ public:
 	~DoublyCircularList() { clear(); delete sentinal; sentinal = nullptr; }
 
 	/**
-	 * @Çå¿ÕÁ´±í
+	 * @æ¸…ç©ºé“¾è¡¨
 	 */
 	void clear() {
 		while (!empty()) {
@@ -88,12 +88,13 @@ public:
 	}
 
 	/**
-	 * @ÏòÁ´±íÎ²²¿²åÈëÔªËØ
+	 * @å‘é“¾è¡¨å°¾éƒ¨æ’å…¥å…ƒç´ 
 	 *
-	 * @²ÎÊı'data'½«»á±»²åÈëÁ´±íÎ²²¿
+	 * @å‚æ•°'data'å°†ä¼šè¢«æ’å…¥é“¾è¡¨å°¾éƒ¨
 	 */
 
-	void push_back(const T& data) {
+	void push_back(const T& data) 
+	{
 		
 		auto newNode = new Node(data, sentinal->prev, sentinal);
 		newNode->prev->next = newNode;
@@ -103,11 +104,12 @@ public:
 	}
 
 	/**
-	 * @ÏòÁ´±íÍ·²¿Ìí¼ÓÔªËØ
+	 * @å‘é“¾è¡¨å¤´éƒ¨æ·»åŠ å…ƒç´ 
 	 *
-	 * @²ÎÊı'data',»á±»Ìí¼Óµ½Á´±íÍ·²¿
+	 * @å‚æ•°'data',ä¼šè¢«æ·»åŠ åˆ°é“¾è¡¨å¤´éƒ¨
 	 */
-	void push_front(const T& data) {
+	void push_front(const T& data)
+	{
 
 		auto newNode = new Node(data, sentinal, sentinal->next);
 		
@@ -119,12 +121,13 @@ public:
 	}
 
 	/**
-	 * @ÏòÖ¸¶¨µÄÎ»ÖÃ²åÈëÔªËØ
+	 * @å‘æŒ‡å®šçš„ä½ç½®æ’å…¥å…ƒç´ 
 	 *
-	 * @²ÎÊı:'data' ½«»á±»²åÈëµ½indexËùÊ¾µÄÎ»ÖÃ
-	 * @²ÎÊı:'index' µÚindexÎ»½«»á±»²åÈëdata
+	 * @å‚æ•°:'data' å°†ä¼šè¢«æ’å…¥åˆ°indexæ‰€ç¤ºçš„ä½ç½®
+	 * @å‚æ•°:'index' ç¬¬indexä½å°†ä¼šè¢«æ’å…¥data
 	 */
-	void insert(const T& data, std::size_t index) {
+	void insert(const T& data, std::size_t index)
+	{
 		if (index == 0) {
 			push_front(data);
 		} else if (index > size_) {
@@ -141,11 +144,12 @@ public:
 	}
 
 	/**
-	 * @ÏòÒÑÅÅĞòÍêµÄÁ´±í²åÈëdata
+	 * @å‘å·²æ’åºå®Œçš„é“¾è¡¨æ’å…¥data
 	 *
-	 * @²ÎÊı'data'»á°´Á´±íµÄË³Ğò±»²åÈëµ½ÏàÓ¦Î»ÖÃ
+	 * @å‚æ•°'data'ä¼šæŒ‰é“¾è¡¨çš„é¡ºåºè¢«æ’å…¥åˆ°ç›¸åº”ä½ç½®
 	 */
-	void insert_sorted(const T& data) {
+	void insert_sorted(const T& data)
+	{
 		if (empty() || data <= sentinal->data)
 			return push_front(data);
 		auto it = sentinal->next;
@@ -159,11 +163,11 @@ public:
 	}
 
 	/**
-	 * @É¾³ıÁ´±íµÚn¸öÔªËØ
+	 * @åˆ é™¤é“¾è¡¨ç¬¬nä¸ªå…ƒç´ 
 	 *
-	 * @²ÎÊı:'index'Î»ÖÃµÄÔªËØ½«±»É¾³ı
+	 * @å‚æ•°:'index'ä½ç½®çš„å…ƒç´ å°†è¢«åˆ é™¤
 	 *
-	 * @·µ»ØÖµ:·µ»Ø±»É¾³ıµÄÔªËØÖµ
+	 * @è¿”å›å€¼:è¿”å›è¢«åˆ é™¤çš„å…ƒç´ å€¼
 	 */
 	T erase(std::size_t index) {
 		if (index >= size_)
@@ -178,9 +182,9 @@ public:
 	}
 
 	/**
-	 * @Ö§³ÖstlµÄerase
+	 * @æ”¯æŒstlçš„erase
 	 *
-	 * Åcstl˜ËœÊÈİÆ÷ÖĞerase±í¬FÒ»˜Ó
+	 * èˆ‡stlæ¨™æº–å®¹å™¨ä¸­eraseè¡¨ç¾ä¸€æ¨£
 	 */
 	iterator erase(iterator pos)
 	{
@@ -195,9 +199,9 @@ public:
 	}
 
 	/**
-	 * @É¾³ıÁ´±íÎ²²¿ÔªËØ
-	 *ÔªËØ»á±»µ¯³ö
-	 * @·µ»ØÖµ:±»É¾³ıµÄÔªËØÖµ
+	 * @åˆ é™¤é“¾è¡¨å°¾éƒ¨å…ƒç´ 
+	 *å…ƒç´ ä¼šè¢«å¼¹å‡º
+	 * @è¿”å›å€¼:è¢«åˆ é™¤çš„å…ƒç´ å€¼
 	 */
 	T pop_back() {
 		if (empty())
@@ -207,9 +211,9 @@ public:
 	}
 
 	/**
-	 * @É¾³ıÔªËØÍ·²¿½Úµã
-	 *ÔªËØ»á±»µ¯³ö
-	 * @·µ»ØÖµ:·µ»Ø±»É¾³ıµÄÔªËØÄÚÈİ
+	 * @åˆ é™¤å…ƒç´ å¤´éƒ¨èŠ‚ç‚¹
+	 *å…ƒç´ ä¼šè¢«å¼¹å‡º
+	 * @è¿”å›å€¼:è¿”å›è¢«åˆ é™¤çš„å…ƒç´ å†…å®¹
 	 */
 	T pop_front() {
 		if (empty())
@@ -219,11 +223,12 @@ public:
 	}
 
 	/**
-	 * @É¾³ıÁ´±íÄÚÔªËØ.Èç¹ûÄ³¸öÔªËØ´æÔÚÓÚÁ´±íÀï,ÔòÉ¾³ı
+	 * @åˆ é™¤é“¾è¡¨å†…å…ƒç´ .å¦‚æœæŸä¸ªå…ƒç´ å­˜åœ¨äºé“¾è¡¨é‡Œ,åˆ™åˆ é™¤
 	 *
-	 * @²ÎÊı:'data',Èç¹ûÓĞdata,Ôò±»É¾³ı
+	 * @å‚æ•°:'data',å¦‚æœæœ‰data,åˆ™è¢«åˆ é™¤
 	 */
-	void remove(const T& data) {
+	void remove(const T& data)
+	{
 		auto it = sentinal->next;
 		for (; it->data != data; it = it->next) {
 			if (it == sentinal)
@@ -234,20 +239,21 @@ public:
 	}
 
 	/**
-	 * @¼ì²éÁ´±íÊÇ·ñÎª¿Õ
+	 * @æ£€æŸ¥é“¾è¡¨æ˜¯å¦ä¸ºç©º
 	 *
-	 * @Èç¹û¿ÕÔò·µ»Øtrue
+	 * @å¦‚æœç©ºåˆ™è¿”å›true
 	 */
 	bool empty() const { return size_ == 1; }
 
 	/**
-	 * @¼ì²éÁ´±íÄÚÊÇ·ñÓĞÄ³ÔªËØ.
+	 * @æ£€æŸ¥é“¾è¡¨å†…æ˜¯å¦æœ‰æŸå…ƒç´ .
 	 *
-	 * @²ÎÊı:'data'»á±»²éÕÒ.
+	 * @å‚æ•°:'data'ä¼šè¢«æŸ¥æ‰¾.
 	 *
-	 * @·µ»ØÖµ: Èç¹ûÓĞÄ³ÖµÔò·µ»Øtrue
+	 * @è¿”å›å€¼: å¦‚æœæœ‰æŸå€¼åˆ™è¿”å›true
 	 */
-	bool contains(const T& data) const {
+	bool contains(const T& data) const
+	{
 		if (empty())
 			return false;
 
@@ -262,22 +268,24 @@ public:
 	}
 
 	/**
-	 * @ÔÊĞíÏÂ±ê·ÃÎÊÁ´±íµÄ·½·¨.(¼æÈİstl,.at &&[])
+	 * @å…è®¸ä¸‹æ ‡è®¿é—®é“¾è¡¨çš„æ–¹æ³•.(å…¼å®¹stl,.at &&[])
 	 * 
-	 * @Èç¹ûÏÂ±êÔ½½ç,Å×³öÈçÏÂÒì³£
+	 * @å¦‚æœä¸‹æ ‡è¶Šç•Œ,æŠ›å‡ºå¦‚ä¸‹å¼‚å¸¸
 	 * std::out_of_range exception
 	 *
-	 * @²ÎÊı:'index' "Êı×é"µÄÏÂ±ê,´Óhead½Úµã¿ªÊ¼
+	 * @å‚æ•°:'index' "æ•°ç»„"çš„ä¸‹æ ‡,ä»headèŠ‚ç‚¹å¼€å§‹
 	 * 
-	 * @·µ»ØÖµ: ·µ»Ø¸ÃÏÂ±ê¶ÔÏóµÄÒıÓÃ
-	 * Á´±í´æ´¢¶ÔÏó¿ÉÄÜ±»¸ü¸Ä! Èç²»ĞèÒª¸ü¸Ä,ÇëÊ¹ÓÃconst DoublyCircularList<T>
+	 * @è¿”å›å€¼: è¿”å›è¯¥ä¸‹æ ‡å¯¹è±¡çš„å¼•ç”¨
+	 * é“¾è¡¨å­˜å‚¨å¯¹è±¡å¯èƒ½è¢«æ›´æ”¹! å¦‚ä¸éœ€è¦æ›´æ”¹,è¯·ä½¿ç”¨const DoublyCircularList<T>
 	 */
-	T& at(std::size_t index) {
+	T& at(std::size_t index) 
+	{
 		return const_cast<T&>(
 			static_cast<const DoublyCircularList*>(this)->at(index));
 	}
 
-	const T& at(std::size_t index) const {
+	const T& at(std::size_t index) const 
+	{
 		if (index >= size_)
 			throw std::out_of_range("Index out of bounds");
 		auto it = sentinal;
@@ -288,13 +296,14 @@ public:
 	}
 
 	/**
-	 * @²éÕÒÁ´±íÀïÊÇ·ñÓĞÄ³ÔªËØ
+	 * @æŸ¥æ‰¾é“¾è¡¨é‡Œæ˜¯å¦æœ‰æŸå…ƒç´ 
 	 *
-	 * @²ÎÊı: 'data'»á±»Á´±í²éÕÒ
+	 * @å‚æ•°: 'data'ä¼šè¢«é“¾è¡¨æŸ¥æ‰¾
 	 * 
-	 * @·µ»ØÖµ:·µ»ØÔªËØÎ»ÖÃ.
+	 * @è¿”å›å€¼:è¿”å›å…ƒç´ ä½ç½®.
 	 */
-	std::size_t find(const T& data) const {
+	std::size_t find(const T& data) const
+	{
 		if (size_ == 0)
 			return 0;
 
@@ -311,7 +320,7 @@ public:
 	}
 
 	/**
-	 * @·µ»ØÔªËØ´óĞ¡
+	 * @è¿”å›å…ƒç´ å¤§å°
 	 */
 	std::size_t size() const { return size_; }
 
@@ -325,7 +334,7 @@ public:
 
 public:
 /**
- * @stl·ç¸ñÈİÆ÷Ö§³Ö,ÓëstlÏàÍ¬.¹Ê²»Ğ´×¢ÊÍ
+ * @stlé£æ ¼å®¹å™¨æ”¯æŒ,ä¸stlç›¸åŒ.æ•…ä¸å†™æ³¨é‡Š
  *
  */
 	iterator begin() noexcept { return iterator(sentinal->next); }
@@ -382,7 +391,7 @@ private:
 	{
 		if (empty())
 			throw std::out_of_range("List is empty (Internal delete)");
-		//	sentinal ²»ÔÊÔS±»„h³ı
+		//	sentinal ä¸å…è¨±è¢«åˆªé™¤
 		if (To_delete == sentinal)
 			throw std::out_of_range("Index Out of Range (Internal delete)");
 		To_delete->next->prev = To_delete->prev;
@@ -394,7 +403,8 @@ private:
 		return out;
 	}
 
-	static Node* copy_list(const Node* other_head) {
+	static Node* copy_list(const Node* other_head) 
+	{
 		DoublyCircularList<T> copy;
 		copy.push_back(other_head->data);
 
@@ -413,7 +423,7 @@ private:
 	std::size_t size_{0u};
 };
 
-}  // namespace structures
+}  // namespace VihoStructures
 
 /* list trait */
 template <>
