@@ -1,9 +1,9 @@
-/**
- * @iteratorµÄ»ù±¾ÊµÏÖ
+ï»¿/**
+ * @iteratorçš„åŸºæœ¬å®ç°
  *
- * @ÈÃÈİÆ÷Ö§³ÖstlÏ°¹ßµÄĞ´·¨, Ìí¼Óº¯ÊıÊ½±à³ÌµÄÖ§³Ö
- * @²»Í¬µÄiteratorÖ§³Ö²»Í¬µÄ·½·¨ Çë½÷É÷Ñ¡Ôñ.
- * @random_iteratorÖ§³ÖµÄ×î¶à,¿ÉÒÔÈÎÒâ·ÃÎÊÏÂ±ê.Ä³Ğ©iterator½öÌá¹©begin(),end()
+ * @è®©å®¹å™¨æ”¯æŒstlä¹ æƒ¯çš„å†™æ³•, æ·»åŠ å‡½æ•°å¼ç¼–ç¨‹çš„æ”¯æŒ
+ * @ä¸åŒçš„iteratoræ”¯æŒä¸åŒçš„æ–¹æ³• è¯·è°¨æ…é€‰æ‹©.
+ * @random_iteratoræ”¯æŒçš„æœ€å¤š,å¯ä»¥ä»»æ„è®¿é—®ä¸‹æ ‡.æŸäº›iteratorä»…æä¾›begin(),end()
  * @author:vihoc 
  */
 
@@ -89,7 +89,7 @@ namespace VihoStructures {
 		 reference operator[](size_type) const;
 	 };
 	 */
-	//TODO ÏÂ±ê
+	//TODO ä¸‹æ ‡
 	typedef int size_type;
 	template <typename T>
 	class random_iterator
@@ -110,15 +110,16 @@ namespace VihoStructures {
 		self_type operator--(int junk) { ptr_--; return *this; }
 		self_type operator+(int junk) { ptr_ += junk; return *this; }
 		self_type operator-(int junk) { ptr_ -=junk; return *this; }
-		difference_type operator-(const self_type junk) { return  ptr_ - junk.ptr_ ; }//TODO¼ì²é±ß½ç
-		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO¼ì²é±ß½ç
+
+		//difference_type operator+(const self_type junk) { return  ptr_ + junk.ptr_ ; }//TODOæ£€æŸ¥è¾¹ç•Œ
+		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODOæ£€æŸ¥è¾¹ç•Œ
 		reference operator*() { return *ptr_; }
 		pointer operator->() { return ptr_; }
 		reference operator*() const{ return *ptr_; }
 		pointer operator->() const { return ptr_; }
 		//TODO untested
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
-		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+		bool operator!=(const self_type& rhs) { return  ptr_ != rhs.ptr_; }
 		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) const { return ptr_ != rhs.ptr_; }
 
@@ -146,8 +147,8 @@ namespace VihoStructures {
 		self_type operator--(int junk) { ptr_--; return *this; }
 		self_type operator+(int junk) { ptr_ += junk; return *this; }
 		self_type operator-(int junk) { ptr_ -= junk; return *this; }
-		difference_type operator-(const self_type junk) { return junk.ptr_ - ptr_; }//TODO¼ì²é±ß½ç
-		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO¼ì²é±ß½ç
+		difference_type operator-(const self_type junk) { return junk.ptr_ - ptr_; }//TODOæ£€æŸ¥è¾¹ç•Œ
+		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODOæ£€æŸ¥è¾¹ç•Œ
 		reference operator*() { return *ptr_; }
 		pointer operator->() { return ptr_; }
 		reference operator*() const { return *ptr_; }
@@ -165,7 +166,7 @@ namespace VihoStructures {
 		pointer ptr_;
 	};
 
-//TODO ¸ÄµÄ¸üÇåÎú
+//TODO æ”¹çš„æ›´æ¸…æ™°
 	typedef int size_type;
 	template <typename T>
 	class bidirectional_iterator
@@ -173,7 +174,7 @@ namespace VihoStructures {
 	public:
 		typedef bidirectional_iterator self_type;
 		typedef typename T::value_type value_type;
-		typedef typename T::value_type reference; //Ê¹ÓÃT::value_refence »á±àÒë´íÎó.
+		typedef typename T::value_type reference; //ä½¿ç”¨T::value_refence ä¼šç¼–è¯‘é”™è¯¯.
 		typedef T* pointer;
 		typedef size_t difference_type;
 		//typedef std::forward_iterator_tag iterator_category;
@@ -183,21 +184,29 @@ namespace VihoStructures {
 		explicit bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
 		bidirectional_iterator(bidirectional_iterator& iter) :ptr_(iter.ptr_) {}
 		bidirectional_iterator(bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
-		//~bidirectional_iterator(){ }
-		//bidirectional_iterator(const bidirectional_iterator&) = default;
+		bidirectional_iterator(const bidirectional_iterator& iter) :ptr_(iter.ptr_) {}
+		bidirectional_iterator(const bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
+
 		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
 		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
 		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+
+
 		self_type operator++() const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
 		self_type operator++(int junk) const { ptr_ = (*ptr_)++; return *this; }
 		self_type operator--() const{ self_type i = *this; ptr_ = (*ptr_)--; return i; }
 		self_type operator--(int junk) const { ptr_ = (*ptr_)--; return *this; }
-		self_type& operator=(const self_type& other) = default;
+
+		self_type operator=(self_type other) { ptr_ = other.ptr_; return *this; }
+
 		reference operator*() { return **ptr_; }
-		pointer operator->() { return *ptr_; }
+		pointer operator->() { return ptr_; }
+
+		
 		const reference operator*() const { return **ptr_; }
 		const pointer operator->() const { return *ptr_; }
+
 		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
 		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
 		bool operator==(const self_type& rhs) const { return ptr_ == rhs.ptr_; }
@@ -207,6 +216,8 @@ namespace VihoStructures {
 		bool operator<(const self_type& rhs) const { return ptr_ < rhs.ptr_; }
 		bool operator>(const self_type& rhs) { return ptr_ > rhs.ptr_; }
 		bool operator>(const self_type& rhs) const { return ptr_ > rhs.ptr_; }
+/*protected:*/
+//	const pointer getiterptr() { return *ptr_; }
 	private:
 		pointer ptr_;
 	};
@@ -234,7 +245,9 @@ namespace VihoStructures {
 		self_type operator++(int junk) const { ptr_ = (*ptr_)++; return *this; }
 		self_type operator--() const { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 		self_type operator--(int junk) const { ptr_ = (*ptr_)--; return *this; }
-		//self_type& operator=(const self_type& other) = default;
+
+		self_type operator=(self_type other) { std::swap(*this, other); }
+
 		const reference operator*() { return **ptr_; }
 		const pointer operator->() { return *ptr_; }
 		const reference operator*() const { return **ptr_; }
@@ -261,7 +274,7 @@ namespace VihoStructures {
 	public:
 		typedef forward_iterator self_type;
 		typedef typename T::value_type value_type;
-		typedef typename T::value_type reference; //Ê¹ÓÃT::value_refence »á±àÒë´íÎó.
+		typedef typename T::value_type reference; //ä½¿ç”¨T::value_refence ä¼šç¼–è¯‘é”™è¯¯.
 		typedef T* pointer;
 		typedef size_t difference_type;
 		//typedef std::forward_iterator_tag iterator_category;
@@ -321,6 +334,6 @@ namespace VihoStructures {
 		pointer ptr_;
 	};
 
-}
+} //namespace VihoStructures
 
 #endif

@@ -318,22 +318,22 @@ public:
 		 *TODO noexcept
 		 */
 	iterator begin() { return iterator(&contents[0]); }
-	iterator end() { return iterator(&contents[max_size_]); }
+	iterator end() { return iterator(&contents[size_]); }
 
 
-	const_iterator begin() const { return iterator(&contents[0]); }
-	const_iterator end() const { return iterator(&contents[max_size_]); }
+	const iterator begin() const { return iterator(&contents[0]); }
+	const iterator end() const { return iterator(&contents[size_]); }
 
 	const_iterator cbegin() { return const_iterator(&contents[0]); }
-	const_iterator cend() { return const_iterator(&contents[max_size_]); }
+	const_iterator cend() { return const_iterator(&contents[size_]); }
 
-	reverse_iterator rbegin() { return reverse_iterator(&contents[max_size_ - 1]); }
+	reverse_iterator rbegin() { return reverse_iterator(&contents[size_ - 1]); }
 	reverse_iterator rend() { return reverse_iterator(&contents[-1]); }
 
-	reverse_iterator rbegin() const { return reverse_iterator(&contents[max_size_ - 1]); }
+	reverse_iterator rbegin() const { return reverse_iterator(&contents[size_ - 1]); }
 	reverse_iterator rend() const { return reverse_iterator(&contents[-1]); }
 
-	const_reverse_iterator crbegin() { return const_reverse_iterator(&contents[max_size_ - 1]); }
+	const_reverse_iterator crbegin() { return const_reverse_iterator(&contents[size_ - 1]); }
 	const_reverse_iterator crend() { return const_reverse_iterator(&contents[-1]); }
 
 private:
