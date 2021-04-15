@@ -15,20 +15,15 @@
 #include<vector>
 int main()
 {
+
+
+
+
    // _CrtSetDbgFlag(true);
     std::cout << "Hello World!\n";
     VihoStructures::ArrayList<int> test = {5, 1, 2, 3, 4, 4, 3, 2, 1, 5};
 	std::vector<int> z = { 1, 2, 5, 3, 4 };
-// 	std::sort(z.begin(), z.end(), [&test](auto a, auto b)
-// 		   {
-// 
-// 	             return a < b;
-// 	         });
-// 	std::cout << "fucking array data" << std::endl;
-// 	for (auto e : z)
-// 	{
-// 		std::cout << e << std::endl;
-// 	}
+
 	std::cout << "fucking array data" << std::endl;
 	int x = 0;
     for (auto i : test)
@@ -37,40 +32,28 @@ int main()
     }
     std::cout<<std::endl;
 	std::cout << "move "<<std::endl;
-	//*(test.begin()) = std::move(*(test.begin() + 1));
 
-	//插入排序
-	for (auto iter = test.begin() + 1 ; iter != test.end(); ++iter)
-	{
-		for(auto iter2 = test.begin(); iter2 != iter; ++ iter2)
-			if (*iter > *iter2)
-			{
-				std::cout<< "      " << "this time " << *iter << "    " << *iter2 << std::endl;
-				//std::swap(*iter, *iter2);
-				auto T = *iter;
-				*iter = *iter2;
-				*iter2 = T;
-			}
-	}
 
 	for (auto i : test)
 	{
 		std::cout << i;
 	}
 	std::cout << std::endl;
+	std::cout << "operator[]"<<std::endl;
+	const VihoStructures::ArrayList<int> consttest(test);
+	for (size_t i = 0; i < test.size(); ++i)
+	{
+		std::cout << consttest[i] << "    ";
+		std::cout << consttest.at(i) << "    ";
+	}
+	std::cout << std::endl;
     std::cout << test.end() - test.begin();
 	
-	//std::swap(*(test.begin()), *(test.end() - 2));
-//     std::sort(test.begin(), test.end(), [&test](auto a, auto b)
-// 		{
-// 			std::cout << "fucking array data" << std::endl;
-// 				for (auto e : test)
-// 				{
-// 				std::cout << e <<"   ";
-// 				}
-// 				std::cout << std::endl;
-//             return a > b;
-//         });
+    std::sort(test.begin(), test.end(), [&test](auto a, auto b)
+		{
+
+            return a > b;
+        });
 	std::cout << "const_iterator" << std::endl;
     for (auto i = test.cbegin(); i!= test.cend(); ++i , ++x)
     {
@@ -121,9 +104,10 @@ int main()
 		std::cout << *iter << std::endl;
 	}
 	//VihoStructures::Tree<int, VihoStructures::sampleNode<int>> testTree = { 1, 3,5, 6, 8 };
-	VihoStructures::BinaryTree<int> testbinary;
-	testbinary.ImportDataFromArray(test);
-	testbinary.print();
+
+//	VihoStructures::BinaryTree<int> testbinary(test);
+//	testbinary.ImportDataFromArray(test);
+//	testbinary.print();
     return 0;
 }
 

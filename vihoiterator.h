@@ -104,12 +104,15 @@ namespace VihoStructures {
 		typedef std::random_access_iterator_tag iterator_category;
 		typedef int difference_type;
 		random_iterator(pointer ptr) : ptr_(ptr) { }
-		self_type operator++() { self_type i = *this; ptr_++; return i; }
-		self_type operator++(int junk) { ptr_++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_--; return i; }
-		self_type operator--(int junk) { ptr_--; return *this; }
-		self_type operator+(int junk) { ptr_ += junk; return *this; }
-		self_type operator-(int junk) { ptr_ -=junk; return *this; }
+		//operator++() pre-increment
+		self_type operator++() { ptr_++; return *this; }
+		//operator++() post-increment
+		self_type operator++(int junk) { self_type i = *this; ptr_++; return i; }
+		self_type operator--() { ptr_--; return *this; }
+		self_type operator--(int junk) { self_type i = *this; ptr_--; return i; }
+		//+不能修改本身. 于+=相同
+		self_type operator+(int junk) { self_type i = *this;  i.ptr_ += junk; return i; }
+		self_type operator-(int junk) { self_type i = *this;  i.ptr_ -= junk; return i; }
 
 		//difference_type operator+(const self_type junk) { return  ptr_ + junk.ptr_ ; }//TODO检查边界
 		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO检查边界
@@ -141,12 +144,12 @@ namespace VihoStructures {
 		typedef int difference_type;
 		typedef std::random_access_iterator_tag iterator_category;
 		const_random_iterator(pointer ptr) : ptr_(ptr) { }
-		self_type operator++() { self_type i = *this; ptr_++; return i; }
-		self_type operator++(int junk) { ptr_++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_--; return i; }
-		self_type operator--(int junk) { ptr_--; return *this; }
-		self_type operator+(int junk) { ptr_ += junk; return *this; }
-		self_type operator-(int junk) { ptr_ -= junk; return *this; }
+		self_type operator++() { ptr_++; return *this; }
+		self_type operator++(int junk) { self_type i = *this; ptr_++; return i; }
+		self_type operator--() { ptr_--; return *this; }
+		self_type operator--(int junk) { self_type i = *this; ptr_--; return i; }
+		self_type operator+(int junk) { self_type i = *this;  i.ptr_ += junk; return i; }
+		self_type operator-(int junk) { self_type i = *this;  i.ptr_ -= junk; return i; }
 		difference_type operator-(const self_type junk) { return junk.ptr_ - ptr_; }//TODO检查边界
 		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO检查边界
 		reference operator*() { return *ptr_; }
@@ -187,16 +190,16 @@ namespace VihoStructures {
 		bidirectional_iterator(const bidirectional_iterator& iter) :ptr_(iter.ptr_) {}
 		bidirectional_iterator(const bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
 
-		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
-		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
+		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
+		self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
 
-		self_type operator++() const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator++(int junk) const { ptr_ = (*ptr_)++; return *this; }
-		self_type operator--() const{ self_type i = *this; ptr_ = (*ptr_)--; return i; }
-		self_type operator--(int junk) const { ptr_ = (*ptr_)--; return *this; }
+		self_type operator++() const { ptr_ = (*ptr_)++; return *this; }
+		self_type operator++(int junk) const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator--() const{ ptr_ = (*ptr_)--; return *this; }
+		self_type operator--(int junk) const{ self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
 		self_type operator=(self_type other) { ptr_ = other.ptr_; return *this; }
 
@@ -236,15 +239,16 @@ namespace VihoStructures {
 		const_bidirectional_iterator(const_bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
 		//~bidirectional_iterator() { }
 		//const_bidirectional_iterator(const const_bidirectional_iterator&) = default;
-		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
-		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
+		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
+		self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
-		self_type operator++() const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator++(int junk) const { ptr_ = (*ptr_)++; return *this; }
-		self_type operator--() const { self_type i = *this; ptr_ = (*ptr_)--; return i; }
-		self_type operator--(int junk) const { ptr_ = (*ptr_)--; return *this; }
+
+		self_type operator++() const { ptr_ = (*ptr_)++; return *this; }
+		self_type operator++(int junk) const { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator--() const { ptr_ = (*ptr_)--; return *this; }
+		self_type operator--(int junk) const { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
 		self_type operator=(self_type other) { std::swap(*this, other); }
 
@@ -282,10 +286,10 @@ namespace VihoStructures {
 		//		typedef int difference_type;
 		forward_iterator(pointer ptr) : ptr_(ptr) { }
 
-		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
-		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
+		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
+		self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
 		reference operator*() { return **ptr_; }
 		pointer operator->() { return *ptr_; }
@@ -312,10 +316,11 @@ namespace VihoStructures {
 		typedef size_t difference_type;
 		typedef std::forward_iterator_tag iterator_category;
 		const_forward_iterator(pointer ptr) : ptr_(ptr) { }
-		self_type operator++() { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator++(int junk) { ptr_ = (*ptr_)++; return *this; }
-		self_type operator--() { self_type i = *this; ptr_ = (*ptr_)--; return i; }
-		self_type operator--(int junk) { ptr_ = (*ptr_)--; return *this; }
+		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
+		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
+		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
+		self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+
 
 		reference operator*() { return **ptr_; }
 		pointer operator->() { return *ptr_; }

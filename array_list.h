@@ -25,7 +25,12 @@ namespace VihoStructures {
  * @使用数组实现列表容器 list(data structure).也就是动态数组 
  *
  * @模板参数为需要存储的数据类
+ * 也許可以這麽定義
+ * template <class T, class A = std::allocator<T>>
+ * class ArrayList : public std::iterator<std::random_access_iterator_tag
+ *										, class T>
  */
+
 template <class T, class A = std::allocator<T>>
 class ArrayList {
 
@@ -42,10 +47,7 @@ public:
 	using const_iterator = const_random_iterator<const T>;
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-// 	using iterator = _Vector_iterator<_Scary_val>;
-// 	using const_iterator = _Vector_const_iterator<_Scary_val>;
-// 	using reverse_iterator = _STD reverse_iterator<iterator>;
-// 	using const_reverse_iterator = _STD reverse_iterator<const_iterator>;
+
 
 
 public:
