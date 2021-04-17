@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <function>
 #include "../../array_list.h"
 #include "evpp/libevent.h"
 #include "evpp/event_watcher.h"
@@ -9,33 +10,12 @@
 #include "evpp/event_loop_thread.h"
 #include "evpp/tcp_server.h"
 #include "evpp/buffer.h"
-
+#include "evpp/tcp_callbacks.h"
 #include "evpp/tcp_conn.h"
 
 constexpr bool OpenSuccess = true; 
 class App;
-void OnMessage(const evpp::TCPConnPtr& conn,
-	evpp::Buffer* msg) {
-	std::string s = msg->NextAllString();
-	LOG_INFO << "Received a message [" << s << "]";
-	if (s == "quit" || s == "exit") {
-		conn->Close();
-	}
-	else
-	{
-		conn->Send(App::GetInstance()->GetRandomQuote());
-	}
-}
 
-
-void OnConnection(const evpp::TCPConnPtr& conn) {
-	if (conn->IsConnected()) {
-		LOG_INFO << "Accept a new connection from " << conn->remote_addr();
-	}
-	else {
-		LOG_INFO << "Disconnected from " << conn->remote_addr();
-	}
-}
 
 class Qod
 {
@@ -82,16 +62,37 @@ private:
 };
 class App
 {
-
-	void SetMessageCallback(MessageCallback callback)
-	{
-		server.SetMessageCallback(&callback);
+	void OnMessage(const evpp::TCPConnPtr& conn,
+		evpp::Buffer* msg) {
+		std::string s = msg->NextAllString();
+		LOG_INFO << "Received a message [" << s << "]";
+		if (s == "quit" || s == "exit") {
+			conn->Close();
+		}
+		else
+		{
+			conn->Send(App::GetInstance()->GetRandomQuote());
+		}
 	}
 
-	void SetConnectionCallback(const ConnectionCallback& callback)
-	{
-		server.SetConnectionCallback(&callback);
+
+	void OnConnection(const evpp::TCPConnPtr& conn) {
+		if (conn->IsConnected()) {
+			LOG_INFO << "Accept a new connection from " << conn->remote_addr();
+		}
+		else {
+			LOG_INFO << "Disconnected from " << conn->remote_addr();
+		}
 	}
+// 	void SetMessageCallback(MessageCallback callback)
+// 	{
+// 		server.SetMessageCallback(&callback);
+// 	}
+// 
+// 	void SetConnectionCallback(const ConnectionCallback& callback)
+// 	{
+// 		server.SetConnectionCallback(&callback);
+// 	}
 	bool init()
 	{
 		server.Init();
@@ -138,8 +139,9 @@ int main(int argc, char* argv[]) {
 	}
 	std::string addr = std::string("0.0.0.0:") + port;
 	auto appins = App::GetInstance(addr, "wisdom.txt");
-	
+	std::function<void(const evpp::TCPConnPtr&, evpp::Buffer*)> messageFnc = std::bind(&App::OnMessage, App, std::placeholders::_1, std::placeholders::_2);
 	appins->SetMessageCallback(&OnMessage);
+	std::function<void(const TCPConnPtr&)> connectFunc = std::bind(&App::OnMessage, App, std::placeholders::_1);
 	appins->SetConnectionCallback(&OnConnection);
 	
 	appins->Start();
