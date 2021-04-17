@@ -1,0 +1,5 @@
+這是一些利用evpp寫的小程序樣例
+
+evpp文件夾為vspkg工具在我電腦上安裝的版本 windows-x64, 可以自己去編譯,項目地址github.com/360/evpp
+
+quoteServer使用evpp::TCPserver,每次返回一條智慧名言
