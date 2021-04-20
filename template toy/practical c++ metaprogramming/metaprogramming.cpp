@@ -34,6 +34,11 @@ namespace sence1
 		std::integral_constant<std::uint64_t, 1024 * 1024 * 1024>>::type::value;
 		std::cout << dafault_buffer << std::endl;
 	}
+	template<typename T>
+	void sence_checkIsInt(T data)
+	{
+		static_assert(std::is_same<typename T::type, int>::value, "oops, type is wrong");
+	}
 	
 }
 
@@ -174,13 +179,25 @@ namespace sence3
 		using type = std::tuple<Arg...>;
 		//using NonPtr_type = std::tuple<Arg...>;
 	};
+
 	template<typename F>
 	struct make_tuple_of_param_nonptr;
 	template<typename Ret, typename... Arg>
 	struct make_tuple_of_param_nonptr<Ret (Arg...)>
 	{
-		using type = std::tuple<std::remove_pointer<Arg>...>;
+		using type = std::tuple<std::remove_pointer_t<Arg>...>;
 		
+	};
+	//mark, this is one of the mistake in the book.
+	//when u try to use make_tuple_of_param_nonptr<Ret (Arg...)>
+	//there 's plenty of error wait for u 
+	//the reason is when a function like this void g();
+	// f<void()>(g), f<void(*)()>(g) and f<void(&)()>(g) are both acepted
+	//the book given the function template, not function pointer template. 
+	template<typename Ret, typename... Arg>
+	struct make_tuple_of_param_nonptr<Ret(*)(Arg...)> //pointer-to-function specialization
+	{
+		using type = std::tuple<std::remove_pointer_t<Arg>...>;
 	};
 	template<typename F>
 	using make_tuple_of_param_t = typename make_tuple_of_param<F>::type;
@@ -289,6 +306,146 @@ namespace sence3
 
 }
 
+namespace sence4
+{
+	template<typename T, T Value>
+	struct Integral_constant
+	{
+		using type = T;
+		static constexpr T value = Value;
+	};
+
+	void trytestIntegral_constant()
+	{
+		using someType = Integral_constant<int, 4>::type;
+		constexpr Integral_constant<int, 4> i;
+		sence1::sence_checkIsInt(i);
+	}
+
+	template<class T>
+	struct as_constRef
+	{
+		using type = T const&;
+	};
+
+	void tryInternalType()
+	{
+		using cref = as_constRef<float>::type;
+		//some code blow here
+	}
+
+	struct first_thought_of_mete_list
+	{
+		static constexpr std::size_t size = 4;
+		using element0 = char;
+		using element1 = short;
+		using element2 = int;
+		using element3 = long;
+	};
+	template<typename... Arg> struct mete_list{};
+	void try_metalist()
+	{
+		using list_of_meta = mete_list<char, short, int, long>;
+		//TODO, findout useful code
+	}// Any template class accepting a variable number of typeparameters can be considered a type container
+	template<class Meta_list> struct size;
+	template<template <class...>class Meta_list, class... Element>
+	struct size<Meta_list<Element...>>
+		: std::integral_constant<std::size_t, sizeof...(Element)> {};
+	template<typename T>
+	void try_Meta_list_size()
+	{
+		std::cout << size<T>::value << std::endl;
+	}
+
+
+	template<class List, class New>struct push_back;
+	template<template <class...> class List, class... Elements, class New>
+	struct push_back<List<Elements...>, New>
+	{
+		using type = List<Elements..., New>;
+	};
+	template <class list> struct remove_front;
+	template<template <class...>class List, class Head, class ...Elements>
+	struct remove_front<List<Head, Elements...>>
+	{
+		using type = List <Elements...>;
+	};
+	template<template <class...>class List>
+	struct remove_front<List<>>
+	{
+		using type = List<>;
+	};
+
+	template<class List> struct as_tuple;
+	template <template <class...> class List, class... Elements>
+	struct as_tuple<List<Elements...>>
+	{
+		using type = std::tuple<Elements...>;
+	};
+	template<template<class...> class Container, class... Elements> //class... element is important, for Partial template specialization 
+	struct rename;
+	template <template<class...> class Container, template<class...>class List, class... Elements>
+	struct rename <Container, List<Elements...>>
+	{
+		using type = Container<Elements...>;
+	};
+
+	//using my_variant = rename < boost::variant, std::tuple<int, short>>
+
+	template <typename L1, typename L2> struct append;
+	template <template <class...> class L1, typename... T1, template<class...> class L2, typename... T2>
+	struct append<L1<T1...>, L2<T2...>>
+	{
+		using type = L1<T1..., T2...>;
+	};
+	struct remove_ptr
+	{
+		template <typename T> struct apply
+		{
+			using type = typename std::remove_pointer<T>::type;
+		};
+	};
+	using no_ptrint = remove_ptr::apply<int*> ::type;
+
+	template <template <class...> class Metafunction>
+	struct trylambda
+	{
+		template <typename... Args>struct aplly
+		{
+			using type = typename Metafunction<Args...>::type;
+		};
+	};
+	//for this part, i can't complie it.
+// 	template <typename List, typename F, typename T> struct transform;
+// 	template <template<class...>class List, class... Elements, typename F, typename T>
+// 	struct transform<List<Elements...>, F, T>
+// 	{
+// 		using call = typename F::template apply<T>::type;
+// 		using type = List<call<Elements...>>;
+// 	};
+// 	using no_pointers = transform< Meta_list<int*, float**, double>, trylambda<std::remove_ptr>>::type;
+
+
+}
+
+namespace sence5
+{
+	struct first_command
+	{
+		std::string operator()(int) { return "first"; }
+	};
+	struct second_command
+	{
+		std::string operator()(int) {return "second"}
+	};
+	template <typename command>
+	void execute_command(const command& c, int param);
+	{
+		c(param);
+	}
+}
+
 int main()
 {
 	//sence1::sence_1();
@@ -301,6 +458,10 @@ int main()
 // 			[](double* p) -> double { return *p; }, d
 // 		);
 	//sence3::testNewMagicwangV1();
-	sence3::testNewMagicwangV2();
+	//looks we done our job.
+	//sence3::testNewMagicwangV2();
+	//sence4::trytestIntegral_constant();
+	//sence4::tryInternalType();
+	//sence4::try_Meta_list_size<std::tuple<int, float, void>>();
 }
 
