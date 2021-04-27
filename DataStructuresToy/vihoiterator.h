@@ -99,8 +99,8 @@ namespace VihoStructures {
 		typedef T value_type;
 		typedef T& reference;
 		typedef T* pointer;
-		//typedef size_t difference_type;
-		//typedef std::forward_iterator_tag iterator_category;
+		typedef size_t difference_type;
+		typedef std::forward_iterator_tag iterator_category;
 		typedef std::random_access_iterator_tag iterator_category;
 		typedef int difference_type;
 		random_iterator(pointer ptr) : ptr_(ptr) { }
@@ -114,7 +114,7 @@ namespace VihoStructures {
 		self_type operator+(int junk) { self_type i = *this;  i.ptr_ += junk; return i; }
 		self_type operator-(int junk) { self_type i = *this;  i.ptr_ -= junk; return i; }
 
-		//difference_type operator+(const self_type junk) { return  ptr_ + junk.ptr_ ; }//TODO检查边界
+		difference_type operator+(const self_type junk) { return  ptr_ + junk.ptr_ ; }//TODO检查边界
 		difference_type operator-(const self_type junk) const{ return  ptr_ - junk.ptr_; }//TODO检查边界
 		reference operator*() { return *ptr_; }
 		pointer operator->() { return ptr_; }
@@ -288,8 +288,9 @@ namespace VihoStructures {
 
 		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
 		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
-		self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		//forward iterator can't step back!
+		//self_type operator--() { ptr_ = (*ptr_)--; return *this; }
+		//self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
 		reference operator*() { return **ptr_; }
 		pointer operator->() { return *ptr_; }
@@ -318,8 +319,8 @@ namespace VihoStructures {
 		const_forward_iterator(pointer ptr) : ptr_(ptr) { }
 		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
 		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
-		self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		//self_type operator--() { ptr_ = (*ptr_)--; return *this; }
+		//self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
 
 
 		reference operator*() { return **ptr_; }

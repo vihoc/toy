@@ -32,8 +32,8 @@ public:
 	typedef typename allocator_type::size_type size_type;
 
 public:
-	using iterator = bidirectional_iterator<Node>;
-	using const_iterator = const_bidirectional_iterator<const Node>;
+	using iterator = forward_iterator<Node>;
+	using const_iterator = const_forward_iterator<const Node>;
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
