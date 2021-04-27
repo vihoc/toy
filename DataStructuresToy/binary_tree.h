@@ -9,8 +9,8 @@
 
 #include <iostream>
 
-#include <traits.h>
-#include <tree.h>
+#include "traits.h"
+#include "tree.h"
 
 namespace VihoStructures {
 

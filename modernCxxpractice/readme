@@ -1,0 +1,10 @@
+學習使用現代C++中的產物, 今後或許會實現具體功能或者工程.
+目前只練習C++新特性;
+基於range/v3實現的算法:https://github.com/ericniebler/range-v3;
+基於reactive思想的編程:https://github.com/ReactiveX/RxCpp
+
+目錄:
+rxcpp: vcpkg install rxcpp:x64-windows 生成的include文件夾
+range: vcpkg install range-v3:x64-windows 生成的include文件夾,將子文件夾v3移除(include少一層)
+src: 玩具代碼所在的文件夾, 今後如果有實際應用, 目前代碼都會寫在example文件夾下
+modernCxxPractice: 學習函數式編程/模板/多綫程過程中,對一些學習的書籍裏的代碼的完整可編譯實現,以及一些使用場景,外加一點筆記.
