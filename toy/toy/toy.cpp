@@ -7,12 +7,27 @@
 
 #include <algorithm>
 
-#include"array_list.h"
-#include"doubly_circular_list.h"
-#include"linked_list.h"
-#include"tree.h"
-#include "binary_tree.h"
+#include "../../DataStructuresToy/array_list.h"
+#include "../../DataStructuresToy/doubly_circular_list.h"
+#include "../../DataStructuresToy/linked_list.h"
+#include "../../DataStructuresToy/tree.h"
+#include "../../DataStructuresToy/binary_tree.h"
 #include<vector>
+#include <tuple>
+// template <typename... arg>
+// class T
+// {
+// 	using storeType = void*;
+// 	//using para = arg;
+// 	using args = typename... arg;
+// 	using adictuple = std::tuple<arg...>;
+// 	template<args>
+// 	void setData(args&& arg) { adictuple arg_sss = new adictuple(std::forward<arg>(...)); args_ = static_cast<storeType*>(arg_sss); }
+// 
+// private:
+// 	storeType args_;
+// };
+
 int main()
 {
 

@@ -100,9 +100,9 @@ namespace VihoStructures {
 		typedef T& reference;
 		typedef T* pointer;
 		typedef size_t difference_type;
-		typedef std::forward_iterator_tag iterator_category;
+		
 		typedef std::random_access_iterator_tag iterator_category;
-		typedef int difference_type;
+		//typedef int difference_type;
 		random_iterator(pointer ptr) : ptr_(ptr) { }
 		//operator++() pre-increment
 		self_type operator++() { ptr_++; return *this; }
@@ -237,8 +237,7 @@ namespace VihoStructures {
 		explicit const_bidirectional_iterator(pointer ptr) : ptr_(ptr) { }
 		const_bidirectional_iterator(const_bidirectional_iterator& iter) :ptr_(iter.ptr_) {}
 		const_bidirectional_iterator(const_bidirectional_iterator&& iter) :ptr_(iter.ptr_) {}
-		//~bidirectional_iterator() { }
-		//const_bidirectional_iterator(const const_bidirectional_iterator&) = default;
+
 		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
 		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
 		self_type operator--() { ptr_ = (*ptr_)--; return *this; }
@@ -288,9 +287,8 @@ namespace VihoStructures {
 
 		self_type operator++() { ptr_ = (*ptr_)++; return *this; }
 		self_type operator++(int junk) { self_type i = *this; ptr_ = (*ptr_)++; return i; }
-		//forward iterator can't step back!
-		//self_type operator--() { ptr_ = (*ptr_)--; return *this; }
-		//self_type operator--(int junk) { self_type i = *this; ptr_ = (*ptr_)--; return i; }
+		//forward iterator can't step back! 
+		//forward iterator 不能後退 詳情見cppreference
 
 		reference operator*() { return **ptr_; }
 		pointer operator->() { return *ptr_; }
