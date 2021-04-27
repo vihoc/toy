@@ -121,13 +121,14 @@ struct Node {
 
 	}
 	// 返回樹内最小值
-	T substitute() const {
-		Node* it = right;
-		while (it->left) {
-			it = it->left;
-		}
-		return it->data;
-	}
+// 	T substitute() const
+// 	{
+// 		Node* it = right;
+// 		while (it->left) {
+// 			it = it->left;
+// 		}
+// 		return it->data;
+// 	}
 
 	virtual void print(int indent) const {
 		if (nullptr != right) right->print(indent + 1);
@@ -143,21 +144,21 @@ struct Node {
 	Node* right{nullptr};
 
 protected:
-	Node<T>* find_node_to_delete(const T& data_) {
-		if (data == data_) {
-			if (right && left) {
-				data = substitute();
-				return right->find_node_to_delete(data);
-			} else {
-				return this;
-			}
-		} else {
-			if (data_ < data)
-				return left ? left->find_node_to_delete(data_) : nullptr;
-			else
-				return right ? right->find_node_to_delete(data_) : nullptr;
-		}
-	}
+// 	Node<T>* find_node_to_delete(const T& data_) {
+// 		if (data == data_) {
+// 			if (right && left) {
+// 				data = substitute();
+// 				return right->find_node_to_delete(data);
+// 			} else {
+// 				return this;
+// 			}
+// 		} else {
+// 			if (data_ < data)
+// 				return left ? left->find_node_to_delete(data_) : nullptr;
+// 			else
+// 				return right ? right->find_node_to_delete(data_) : nullptr;
+// 		}
+// 	}
 };
 
 /**

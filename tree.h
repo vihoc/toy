@@ -53,44 +53,58 @@ namespace VihoStructures {
 template <typename T, typename Node>
 class Tree {
 public:
+	
 	Tree() = default;
-
+	using self_type = Tree<T, Node>;
+	using array_type = ArrayList<T>;
 	/*
 	*支持C++11的初始化列表初始化樹
 	*/
-	Tree(std::initializer_list <T>&& other)
+	Tree(std::initializer_list <T>&& list)
 	{
-		for (auto e : other)
+		for (auto e : list)
 		{
 			insert(e);
 		}
 	}
 
-	Tree(const Tree<T, Node>& other) {
+	explicit Tree(const Tree<T, Node>& other) {
 		auto list = other.items();
 		for (std::size_t i = 0; i < list.size(); i++) {
 			insert(list[i]);
 		}
 	}
+	/*
+	explicit Tree(array_type& array)
+	{
+		//clear();
+		for (auto e : array)
+		{
+			insert(e);
+		}
+	}
+	*/
 
-	Tree(Tree<T, Node>&& other) : root{other.root}, size_{other.size_} {
+	Tree(self_type&& other) : root{other.root}, size_{other.size_} {
 		other.root = nullptr;
 		other.size_ = 0;
 	}
 
-	Tree<T, Node>& operator=(const Tree<T, Node>& other) {
+	self_type & operator=(const self_type& other) {
 		Tree copy{other};
 		std::swap(root, copy.root);
 		std::swap(size_, copy.size_);
 		return *this;
 	}
 
-	Tree<T, Node>& operator=(Tree<T, Node>&& other) {
+	self_type& operator=(self_type && other) {
 		Tree copy{std::move(other)};
 		std::swap(root, copy.root);
 		std::swap(size_, copy.size_);
 		return *this;
 	}
+
+
 
 	/**
 	 * @析構函數
@@ -102,7 +116,14 @@ public:
 			delete root;
 		}
 	}
-
+	void ImportDataFromArray(const array_type& array)
+	{
+		//clear();
+		for (auto e : array)
+		{
+			insert(e);
+		}
+	}
 	/**
 	 * @向樹内添加值
 	 */
@@ -234,7 +255,6 @@ protected:
 	std::size_t size_{0u};
 };
 
-}  // namespace VihoStructures
 }  // namespace VihoStructures
 
 #endif
