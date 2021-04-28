@@ -70,7 +70,7 @@ namespace paraalgorithm
 	template<typename Container, typename T, typename Callback>
 	T parallel_Func(typename Container::iterator first, typename Container::iterator last, T init, Callback cb)
 	{
-		std::cout << "func" << std::endl;
+		//std::cout << "func" << std::endl;
 		using Iterator = typename Container::iterator;
 		static_assert(!std::is_same<T, double>::value, "parallel double is not associative");
 		static_assert(!std::is_same<T, float>::value, "parallel float is not associative");

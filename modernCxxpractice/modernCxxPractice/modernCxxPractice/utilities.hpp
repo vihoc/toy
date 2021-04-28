@@ -24,13 +24,13 @@ namespace utilities
 	}
 
 	template<typename Printable>
-	inline auto println(Printable const& to_print, , const std::string& describe)
+	inline auto println(Printable const& to_print, const std::string& describe)
 	{
 		return std::cout << "describe" << to_print << std::endl;
 	}
 
 	template<typename Printable>
-	inline auto println(Printable&& to_print, , const std::string& describe)
+	inline auto println(Printable&& to_print, const std::string& describe)
 	{
 		return std::cout << describe << std::move(to_print) << std::endl;
 	}
