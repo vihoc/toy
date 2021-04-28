@@ -45,7 +45,10 @@ namespace paraalgorithm
 
 			block_start = block_end;
 		}
-		for (auto& t : threads)  t.join();
+		for (auto& t : threads)
+		{
+			if (t.joinable()) t.join();
+		}
 		results.emplace_back(std::accumulate(block_start, last, results.back()));
 		return std::accumulate(results.begin(), results.end(), init);
 	}
@@ -96,10 +99,17 @@ namespace paraalgorithm
 
 			block_start = block_end;
 		}
-		for (auto& t : threads)  t.join();
+		for (auto& t : threads)
+		{
+			if (t.joinable()) t.join();
+		}
 		results.emplace_back(cb(block_start, last, results.back()));
 		return std::accumulate(results.begin(), results.end(), init);
 	}
+
+
+	//在這裏我們將要并行計算的函數放在了外面,這樣我們可以方便的替換成別的函數.
+	//TODO,接口做的更加通用一點
 
 	void runtest_func()
 	{

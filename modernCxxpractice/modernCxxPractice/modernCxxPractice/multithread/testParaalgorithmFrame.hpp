@@ -6,7 +6,7 @@
 
 #ifndef __TEST_PARAALGORITHMFRAME_H__
 #define __TEST_PARAALGORITHMFRAME_H__
-
+#include "utilities.hpp"
 namespace paraalgorithm
 {
 	//i try to make ref of container as const, but failed.
@@ -40,10 +40,7 @@ namespace paraalgorithm
 			{
 				[&resultP, this, &parallelRunTime, &callbackp]()
 				{
-					std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-					resultP = callbackp((this->container).begin(), (this->container).end(),  resultP);
-					std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-					parallelRunTime = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+					parallelRunTime = utilities::TestFuncRunningTime(std::bind(callbackp, (this->container).begin(), (this->container).end(), resultP), resultP);
 					return 0;
 				}
 			};
@@ -51,23 +48,21 @@ namespace paraalgorithm
 			{
 				[&resultN, this, &NomalRunTime, &callbackn]()
 				{
-					std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-					resultN = callbackn((this->container).begin(), (this->container).end(), resultN);
-					std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-					NomalRunTime = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+/
+					NomalRunTime = utilities::TestFuncRunningTime(std::bind(callbackn, (this->container).begin(), (this->container).end(), resultN), resultN);
 					return 0;
 				}
 			};
 			//wait for worker finish
 			if (isdebug)
 			{
-				ThreadParallel.join();
-				threadNomal.join();
+				if(ThreadParallel.joinable()) ThreadParallel.join();
+				if (threadNomal.joinable()) threadNomal.join();
 			}
 			else
 			{
-				ThreadParallel.detach();
-				threadNomal.detach();
+				if (ThreadParallel.joinable())ThreadParallel.detach();
+				if (threadNomal.joinable()) threadNomal.detach();
 			}
 			std::cout << " parallel result Take Time:" << parallelRunTime.count() << "      result is: "  << resultP << std::endl;
 			std::cout << " normal result Take Time:" << NomalRunTime.count() << "      result is: " << resultN << std::endl;
@@ -80,5 +75,7 @@ namespace paraalgorithm
 
 }
 
+
+//做同步,給work綫程發消息,work一起工作,工作完了返回信號給管理綫程,管理綫程調用一個回調函數
 
 #endif
