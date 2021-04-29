@@ -1,4 +1,4 @@
-//Ò»Ğ©²¢ĞĞËã·¨µÄŒ¬F, since now, it based on book "C++ concurency in Action"
+ï»¿//ä¸€äº›å¹¶è¡Œç®—æ³•çš„å¯¦ç¾, since now, it based on book "C++ concurency in Action"
 // may not in future
 //author:vihoc 
 //
@@ -10,11 +10,12 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-#include <numeric>
+
 #include "testParaalgorithmFrame.hpp"
 namespace paraalgorithm
 {
-	//C++ concurrency in actionÖĞµÄparallel_accumulateŒ¬F
+	//A naÃ¯ve parallel version of std::accumulate from the C++ concurrency in action
+	//C++ concurrency in actionä¸­çš„parallel_accumulateå¯¦ç¾
 	template<typename Container, typename T>
 	T parallel_accumulate(typename Container::iterator first,typename Container::iterator last, T init)
 	{
@@ -70,7 +71,6 @@ namespace paraalgorithm
 	template<typename Container, typename T, typename Callback>
 	T parallel_Func(typename Container::iterator first, typename Container::iterator last, T init, Callback cb)
 	{
-		//std::cout << "func" << std::endl;
 		using Iterator = typename Container::iterator;
 		static_assert(!std::is_same<T, double>::value, "parallel double is not associative");
 		static_assert(!std::is_same<T, float>::value, "parallel float is not associative");
@@ -108,8 +108,8 @@ namespace paraalgorithm
 	}
 
 
-	//ÔÚß@ÑYÎÒ‚ƒŒ¢Òª²¢ĞĞÓ‹ËãµÄº¯”µ·ÅÔÚÁËÍâÃæ,ß@˜ÓÎÒ‚ƒ¿ÉÒÔ·½±ãµÄÌæ“Q³É„eµÄº¯”µ.
-	//TODO,½Ó¿Ú×öµÄ¸ü¼ÓÍ¨ÓÃÒ»üc
+	//åœ¨é€™è£æˆ‘å€‘å°‡è¦å¹¶è¡Œè¨ˆç®—çš„å‡½æ•¸æ”¾åœ¨äº†å¤–é¢,é€™æ¨£æˆ‘å€‘å¯ä»¥æ–¹ä¾¿çš„æ›¿æ›æˆåˆ¥çš„å‡½æ•¸.
+	//TODO,æ¥å£åšçš„æ›´åŠ é€šç”¨ä¸€é»
 
 	void runtest_func()
 	{
@@ -136,37 +136,37 @@ namespace paraalgorithm
 
 
 
-//ĞŞ¸Ä´ú´aµÄminimal°æ±¾,¸±®aÎï,Èç¹ûÏëÒªĞŞ¸ÄÄ£°åÏàêP…¢”µ,¿ÉÒÔÏÈĞŞ¸Äß@ÑY
+//ä¿®æ”¹ä»£ç¢¼çš„minimalç‰ˆæœ¬,å‰¯ç”¢ç‰©,å¦‚æœæƒ³è¦ä¿®æ”¹æ¨¡æ¿ç›¸é—œåƒæ•¸,å¯ä»¥å…ˆä¿®æ”¹é€™è£
 namespace minimal
 {
 	//////////////////////////////////////////////////////////////////////////
 	//start of minimal parallel_accumulate
-	template<typename Container, typename T>
-	T somefunc(typename Container::iterator first, typename Container::iterator last, T init)
-	{
-		std::distance(first, last);
-		return init;
-	}
-	template<typename Container, bool isdebug = true>
-	class test
-	{
-	public:
-		test(Container& rhs) :v{ rhs } {}
-		template<typename CallParallel, typename CallNomal>
-		auto runtest(CallParallel callbackp, CallNomal callbackn)
-		{
-
-			int init = 0;
-			return [&]()
-			{
-				callbackp(v.begin(), v.end(), init);
-				callbackn(v.begin(), v.end(), init);
-			};
-
-		}
-	private:
-		Container& v;
-	};
+// 	template<typename Container, typename T>
+// 	T somefunc(typename Container::iterator first, typename Container::iterator last, T init)
+// 	{
+// 		std::distance(first, last);
+// 		return init;
+// 	}
+// 	template<typename Container, bool isdebug = true>
+// 	class test
+// 	{
+// 	public:
+// 		test(Container& rhs) :v{ rhs } {}
+// 		template<typename CallParallel, typename CallNomal>
+// 		auto runtest(CallParallel callbackp, CallNomal callbackn)
+// 		{
+// 
+// 			int init = 0;
+// 			return [&]()
+// 			{
+// 				callbackp(v.begin(), v.end(), init);
+// 				callbackn(v.begin(), v.end(), init);
+// 			};
+// 
+// 		}
+// 	private:
+// 		Container& v;
+// 	};
 
 	// template<typename Iterator, typename T>
 	// T somefunc(typename Iterator first, typename Iterator last, T init)
@@ -190,13 +190,13 @@ namespace minimal
 	// 	std::vector<int> v;
 	// };
 
-	void testminimal()
-	{
+// 	void testminimal()
+// 	{
 		// 	std::vector<int> v;
 //   	test<std::vector<int>> t(v);
 //   	t.runtest(std::bind(somefunc<std::vector<int>, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
 //   		std::bind(somefunc<std::vector<int>, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-	}
+//	}
 
 	//end of minimal parallel_accumulate
 	//////////////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 #ifndef __UTILITIES_H__
 #define __UTILITIES_H__
 #include <numeric>
-
+#include  <chrono>
 namespace utilities
 {
 	//œyÔ‡º¯”µµÄß\ÐÐ•rég ·µ»Østd::chrono::duration<double>
@@ -18,8 +18,8 @@ namespace utilities
 	template<typename Range>
 	inline auto println_range(Range const& range, const std::string& describe)
 	{
-		std::cout << describe <<endl;
-		std::copy(begin(range), end(range), ostream_iterator<decltype(*begin(range))>(std::cout, " "));
+		std::cout << describe <<std::endl;
+		std::copy(begin(range), end(range), std::ostream_iterator<decltype(*begin(range))>(std::cout, " "));
 		return std::cout << std::endl;
 	}
 
@@ -30,7 +30,7 @@ namespace utilities
 	}
 
 	template<typename Printable>
-	inline auto println(Printable&& to_print, const std::string& describe)
+	inline auto println(Printable&& to_print, const std::string&& describe)
 	{
 		return std::cout << describe << std::move(to_print) << std::endl;
 	}

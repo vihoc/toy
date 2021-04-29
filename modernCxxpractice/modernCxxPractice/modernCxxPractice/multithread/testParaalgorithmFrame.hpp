@@ -9,6 +9,8 @@
 #include "utilities.hpp"
 namespace paraalgorithm
 {
+
+
 	//i try to make ref of container as const, but failed.
 	template<typename Container, bool isdebug = true>
 	class testFranework
@@ -40,7 +42,8 @@ namespace paraalgorithm
 			{
 				[&resultP, this, &parallelRunTime, &callbackp]()
 				{
-					parallelRunTime = utilities::TestFuncRunningTime(std::bind(callbackp, (this->container).begin(), (this->container).end(), resultP), resultP);
+					parallelRunTime = utilities::TestFuncRunningTime(std::bind(callbackp, (this->container).begin(), (this->container).end(), resultP),
+																		resultP);
 					return 0;
 				}
 			};
@@ -48,8 +51,8 @@ namespace paraalgorithm
 			{
 				[&resultN, this, &NomalRunTime, &callbackn]()
 				{
-/
-					NomalRunTime = utilities::TestFuncRunningTime(std::bind(callbackn, (this->container).begin(), (this->container).end(), resultN), resultN);
+					NomalRunTime = utilities::TestFuncRunningTime(std::bind(callbackn, (this->container).begin(), (this->container).end(), resultN), 
+																	resultN);
 					return 0;
 				}
 			};
@@ -64,6 +67,8 @@ namespace paraalgorithm
 				if (ThreadParallel.joinable())ThreadParallel.detach();
 				if (threadNomal.joinable()) threadNomal.detach();
 			}
+
+			//when u use detach, then this print will not work. 
 			std::cout << " parallel result Take Time:" << parallelRunTime.count() << "      result is: "  << resultP << std::endl;
 			std::cout << " normal result Take Time:" << NomalRunTime.count() << "      result is: " << resultN << std::endl;
 		}
