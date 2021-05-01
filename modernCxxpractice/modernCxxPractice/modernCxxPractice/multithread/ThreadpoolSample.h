@@ -213,7 +213,8 @@ auto testsleepsortusefuture(std::shared_ptr<paraalgorithm::ThreadPool> pool, Con
 	}
 	elementType time = *(std::max_element(Data.begin(), Data.end()));
 	Data.clear();
-	// i try to use wait, seems not work for my code . i assume it only work for synch
+	// i try to use wait, seems not work for my code . i assume it only work for sync
+	//this is a exam for use native thread, so, better way is using std::package_task
 	bool init = false;
 	while(!init)
 	{ 
@@ -245,6 +246,114 @@ auto testsleepsortusefuture(std::shared_ptr<paraalgorithm::ThreadPool> pool, Con
 		}
 		if (count == wait_Finish.size()) break;
 	}
+}
+
+//there is two way, a work check the result, and submit a copy of itself 
+//or main thread check the promise and the result ,it not sort, submit a task again
+//i decide do this both;
+//first way we don't need change the original Data, the second way we need change the data from the original data set; 
+//for the rest i would like try package_task
+template<typename Container>
+auto testBogo1(std::shared_ptr<paraalgorithm::ThreadPool> pool, Container& Data)
+{
+	static_assert (std::is_same<Container::value_type, int>::value, "we only support int element now");
+	using elementType = typename Container::value_type;
+	bool isunsorted = true;
+	std::function<bool(Container&)> package_func;
+	package_func = [&Data](Container& data) ->bool
+	{
+		
+		int r = rand() % (data.size());
+		for (auto& i : data)
+		{
+			std::swap(i, data[r]);
+		}
+		if (is_sorted(data.begin(), data.end()))
+		{
+			Data.clear();
+			std::copy(data.begin(), data.end(), std::back_inserter(Data));
+			return true;
+		}
+		return false;
+	};
+		std::function<void()> tempfunc;
+		tempfunc = [ &Data, &tempfunc, &package_func, pool]()
+		{
+			Container tempData;
+			std::copy(Data.begin(), Data.end(), std::back_inserter(tempData));
+			try
+			{
+			std::packaged_task<bool(Container&)> Bogotask1(package_func);
+			Bogotask1(tempData);
+			std::future<bool> result = Bogotask1.get_future();
+			if (false == result.get())
+			{
+			
+				std::shared_ptr < paraalgorithm::task > tempcommit = std::make_shared< submit >(tempfunc);
+				pool->commit(tempcommit);
+			}
+			}
+			catch (const std::future_error& e) {
+				std::cout << "Caught a future_error with code \"" << e.code()
+					<< "\"\nMessage: \"" << e.what() << "\"\n";
+			}
+			
+			
+			
+		};
+		auto temp = std::make_shared<submitwithFinish>(tempfunc);
+		
+		std::shared_ptr < paraalgorithm::task > tasktocommit = temp;
+		pool->commit(tasktocommit);
+		//do something 
+		while (true)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(200));
+		}
+
+
+}
+
+template<typename Container>
+auto testBogo2(std::shared_ptr<paraalgorithm::ThreadPool> pool, Container& Data)
+{
+	static_assert (std::is_same<Container::value_type, int>::value, "we only support int element now");
+	using elementType = typename Container::value_type;
+	bool isunsorted = true;
+
+	while (isunsorted)
+	{
+		std::packaged_task<bool(Container&)> Bogotask2(
+			[](Container& data) ->bool
+			{
+				int r = rand() % (data.size());
+				for (auto& i : data)
+				{
+					std::swap(i , data[r]);
+				}
+				return is_sorted(data.begin(), data.end());
+			});
+		std::future<bool> result = Bogotask2.get_future();
+		std::shared_ptr<std::promise<int>> finishpromise = std::make_shared<std::promise<int>>();
+		auto temp = std::make_shared<submitwithFinish>
+			(
+				[&Data, &Bogotask2]()
+				{
+					return Bogotask2(Data);
+				}
+		);
+		temp->setPromise(finishpromise);
+		std::shared_ptr < paraalgorithm::task > tasktocommit = temp;
+		pool->commit(tasktocommit);
+		std::shared_future<int> isjobdone = finishpromise->get_future().share();
+		while (1 != isjobdone.get())
+				;
+		if (true == result.get())
+		{
+			isunsorted = false;
+		}
+	}
+	
 }
 
 /// <summary>

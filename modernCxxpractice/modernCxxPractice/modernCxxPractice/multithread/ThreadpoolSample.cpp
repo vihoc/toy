@@ -57,7 +57,9 @@ void test()
 		std::shared_ptr<paraalgorithm::ThreadPool> p = std::make_shared<paraalgorithm::ThreadPool>(v.size());
 	//testsleepsort(p, v);
 	//std::this_thread::sleep_for(std::chrono::seconds(60));
-		testsleepsortusefuture(p, v);
+		//testsleepsortusefuture(p, v);
+		testBogo1(p, v);
+//		testBogo2(p, v);
 	utilities::println_range(v, "Data:");
 		///////////////////////////////////////œyÔ‡¾Q³Ì³ØÏàêP½YÊø
 }
