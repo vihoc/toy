@@ -16,6 +16,7 @@ namespace paraalgorithm
 {
 	//A naïve parallel version of std::accumulate from the C++ concurrency in action
 	//C++ concurrency in action中的parallel_accumulate實現
+	// it's beyond simple, almost been naive!
 	template<typename Container, typename T>
 	T parallel_accumulate(typename Container::iterator first,typename Container::iterator last, T init)
 	{
@@ -53,19 +54,7 @@ namespace paraalgorithm
 		results.emplace_back(std::accumulate(block_start, last, results.back()));
 		return std::accumulate(results.begin(), results.end(), init);
 	}
-	void runtest()
-	{
-		//init vector
-		constexpr std::size_t maxelement = 50000000;
-		std::vector<int> v(maxelement);
-		
-		std::iota(v.begin(), v.end(), 1);
 
-		testFranework<std::vector<int>> test(v);
-		test.runtest(std::bind(parallel_accumulate<std::vector<int>, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-			std::bind(std::accumulate<std::vector<int>::iterator, int>,  std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-
-	}
 
 	
 	template<typename Container, typename T, typename Callback>
@@ -108,26 +97,6 @@ namespace paraalgorithm
 	}
 
 
-	//在這裏我們將要并行計算的函數放在了外面,這樣我們可以方便的替換成別的函數.
-	//TODO,接口做的更加通用一點
-
-	void runtest_func()
-	{
-		//init vector
-		constexpr std::size_t maxelement = 50000000;
-		std::vector<int> v(maxelement);
-
-		std::iota(v.begin(), v.end(), 1);
-
-		testFranework<std::vector<int>> test(v);
-		test.runtest(std::bind(parallel_Func<std::vector<int>, int, std::function<int(std::vector<int>::iterator, std::vector<int>::iterator, int)>>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,
-			[](std::vector<int>::iterator begin, std::vector<int>::iterator end, int x)
-			{
-				return accumulate(begin, end, x);
-			}),
-			std::bind(std::accumulate<std::vector<int>::iterator, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-
-	}
 	
 
 } // end of paraalgorithm
