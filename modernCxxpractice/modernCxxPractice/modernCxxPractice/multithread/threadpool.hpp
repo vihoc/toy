@@ -18,6 +18,7 @@
 #include <memory>
 #include <stack>
 #include <iostream>
+#include "BasicDataStructure.hpp"
 #include "utilities.hpp"
 #include "parallel_accumulate.h"
 
@@ -28,10 +29,7 @@
 namespace paraalgorithm
 {
 
-	struct empty_stack : std::exception
-	{
-		const char* what() const throw() { return "empty stack"; }
-	};
+
 	struct destuctahead : std::exception
 	{
 		const char* what() const throw() { return "hey, there's plenty data need to execute!"; }
@@ -57,51 +55,7 @@ namespace paraalgorithm
 	//綫程池内部使用棧
 	//使用指針請make_shared之後傳遞
 
-	template<typename T>
-	class threadsafe_stack
-	{
-// 	public:
-// 		typedef  T task_type;
-	public:
-		threadsafe_stack() {}
-		threadsafe_stack(const threadsafe_stack& other)
-		{
-			std::lock_guard<std::mutex> lock(other.m);
-			data = other.data;
-		}
-		threadsafe_stack& operator=(const threadsafe_stack&) = delete;
-		void push(T new_value)
-		{
-			std::lock_guard<std::mutex> lock(m);
-			data.push(new_value);
-		}
-		T pop()
-		{
-			
-			std::lock_guard<std::mutex> lock(m);
-			if (data.empty()) throw empty_stack();
-			//std::shared_ptr<T> const res(std::make_shared<T>(data.top()));
-			T res = data.top();
-			data.pop();
-			return res;
-		}
-		void pop(T& value)
-		{
-			std::lock_guard<std::mutex> lock(m);
-			if (data.empty())
-				throw empty_stack();
-			value = data.top();
-			data.pop();
-		}
-		bool empty() const
-		{
-			std::lock_guard<std::mutex> lock(m);
-			return data.empty();
-		}
-	private:
-		std::stack<T> data;
-		mutable std::mutex m;
-	};
+
 
 	//綫程池
 	//本綫程池無法保證工作綫程中處理的數據的綫程安全,請在傳進來的task中自行保證
@@ -139,18 +93,12 @@ namespace paraalgorithm
 #endif //end of #if THREADPOOL_DEBUG
 							++idleThreadNumber;
 							//獲取隊列中的一個元素
-							try
-							{
-								
-								auto curtask = taskqueue.pop();
+
+							std::shared_ptr<task> curtask;
+							
+							if(taskqueue.try_pop(curtask))
 								curtask->runtask();
 								
-							}
-							catch (std::exception e) {
-								//空隊列是我們所預想的,這時候直接讓出時間片
-								if ("empty stack" == e.what())
-									;//do nothing for now
-							}
 							--idleThreadNumber;
 #ifdef THREADPOOL_DEBUG
 							exitThread();
