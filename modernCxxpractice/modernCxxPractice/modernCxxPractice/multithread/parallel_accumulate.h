@@ -97,7 +97,35 @@ namespace paraalgorithm
 	}
 
 
+	template<typename Container>
+	Container sequential_quick_sort(typename Container::iterator begin, typename Container::iterator end)
+	{
+		using T = typename Container::value_type;
+		using diffrence_type = typename std::iterator_traits<typename Container::iterator>::difference_type;
+		diffrence_type size = distance(begin, end);
+		Container result;
+		if (0 == size)
+		{
+			return result;
+		}
+		Container temp;
+		copy(begin, end, back_inserter(temp));
+		result.splice(result.begin(), temp, temp.begin());
+		T const& pivot = *result.begin();
+		auto divide_point = std::partition(temp.begin(), temp.end(),
+			[&](T const& t) {return t < pivot; });
+		Container lower_part;
+		lower_part.splice(lower_part.end(), temp, temp.begin(),
+			divide_point);
+		auto new_lower(
+			sequential_quick_sort<Container>(lower_part.begin(), lower_part.end()));
+		auto new_higher(
+			sequential_quick_sort<Container>(temp.begin(), temp.end()));
+		result.splice(result.end(), new_higher);
 	
+		result.splice(result.begin(), new_lower);
+		return result;
+	}
 
 } // end of paraalgorithm
 
@@ -110,32 +138,32 @@ namespace minimal
 {
 	//////////////////////////////////////////////////////////////////////////
 	//start of minimal parallel_accumulate
-// 	template<typename Container, typename T>
-// 	T somefunc(typename Container::iterator first, typename Container::iterator last, T init)
-// 	{
-// 		std::distance(first, last);
-// 		return init;
-// 	}
-// 	template<typename Container, bool isdebug = true>
-// 	class test
-// 	{
-// 	public:
-// 		test(Container& rhs) :v{ rhs } {}
-// 		template<typename CallParallel, typename CallNomal>
-// 		auto runtest(CallParallel callbackp, CallNomal callbackn)
-// 		{
-// 
-// 			int init = 0;
-// 			return [&]()
-// 			{
-// 				callbackp(v.begin(), v.end(), init);
-// 				callbackn(v.begin(), v.end(), init);
-// 			};
-// 
-// 		}
-// 	private:
-// 		Container& v;
-// 	};
+	template<typename Container, typename T>
+	T somefunc(typename Container::iterator first, typename Container::iterator last, T init)
+	{
+		std::distance(first, last);
+		return init;
+	}
+	template<typename Container, bool isdebug = true>
+	class test
+	{
+	public:
+		test(Container& rhs) :v{ rhs } {}
+		template<typename CallParallel, typename CallNomal>
+		auto runtest(CallParallel callbackp, CallNomal callbackn)
+		{
+
+			int init = 0;
+			return [&]()
+			{
+				callbackp(v.begin(), v.end(), init);
+				callbackn(v.begin(), v.end(), init);
+			};
+
+		}
+	private:
+		Container& v;
+	};
 
 	// template<typename Iterator, typename T>
 	// T somefunc(typename Iterator first, typename Iterator last, T init)

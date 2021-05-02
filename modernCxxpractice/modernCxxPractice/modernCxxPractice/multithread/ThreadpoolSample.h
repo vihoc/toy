@@ -1,3 +1,8 @@
+/*
+*here is some naive use sample of my naive threadpool
+* author:vihoc
+*/
+
 #ifndef __THERADPOOLSAMPLE_H__
 #define __THERADPOOLSAMPLE_H__
 
@@ -394,6 +399,7 @@ auto testSpaghettiSort(std::shared_ptr<paraalgorithm::ThreadPool> pool, Containe
 		std::shared_ptr < paraalgorithm::task > tasktocommit = temp;
 		pool->commit(tasktocommit);
 		std::shared_future<int> isjobdone = finishpromise->get_future().share();
+		
 		while (1 != isjobdone.get())
 			;
 		utilities::println_range(result.get(), "Data:");
@@ -408,6 +414,8 @@ void test();
 void runtestparallel_accumulate();
 
 void runtestparallel_Func();
+
+void runtestparallel_quicksort();
 
 
 #endif // end of __THERADPOOLSAMPLE_H__

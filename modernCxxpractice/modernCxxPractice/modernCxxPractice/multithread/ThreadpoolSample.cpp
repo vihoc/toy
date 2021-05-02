@@ -48,21 +48,24 @@ void test()
 
 
 
-		std::vector<int> v;
-		//綫程開多了會很卡,數據80%大概是對的.
-		for (int i = 1; i < 1000; i += 100)
-		{
-			v.emplace_back(i);
-		}
-		std::shared_ptr<paraalgorithm::ThreadPool> p = std::make_shared<paraalgorithm::ThreadPool>(v.size());
+// 		std::vector<int> v;
+// 		//綫程開多了會很卡,數據80%大概是對的.
+// 		for (int i = 1; i < 1000; i += 100)
+// 		{
+// 			v.emplace_back(i);
+// 		}
+// 		std::shared_ptr<paraalgorithm::ThreadPool> p = std::make_shared<paraalgorithm::ThreadPool>(v.size());
 	//testsleepsort(p, v);
 	//std::this_thread::sleep_for(std::chrono::seconds(60));
 		//testsleepsortusefuture(p, v);
 //		testBogo1(p, v);
 //		testBogo2(p, v);
-		testSpaghettiSort(p, v);
-	utilities::println_range(v, "Data:");
+/*		testSpaghettiSort(p, v);*/
+//	utilities::println_range(v, "Data:");
 		///////////////////////////////////////測試綫程池相關結束
+
+
+	runtestparallel_quicksort();
 }
 
 void runtestparallel_accumulate()
@@ -74,6 +77,7 @@ void runtestparallel_accumulate()
 	std::iota(v.begin(), v.end(), 1);
 
 	paraalgorithm::testFranework<std::vector<int>> test(v);
+	
 	test.runtest(std::bind(paraalgorithm::parallel_accumulate<std::vector<int>, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
 		std::bind(std::accumulate<std::vector<int>::iterator, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
@@ -98,5 +102,33 @@ void runtestparallel_Func()
 			return accumulate(begin, end, x);
 		}),
 		std::bind(std::accumulate<std::vector<int>::iterator, int>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
+}
+
+// a sample for naive parallel quicksort
+//based on copy expense, this version is looks like  slow than stl::list::sort
+void runtestparallel_quicksort()
+{
+	constexpr std::size_t maxelement = 10000;
+	std::list<int> l;
+	for (int i = 0; i < maxelement; ++i)
+	{
+		l.emplace_back(rand() % maxelement);
+	}
+	paraalgorithm::testFranework<std::list<int>> test(l);
+	auto func = [](std::list<int>::iterator first, std::list<int>::iterator last, int) ->int
+	{
+		std::list<int> result = paraalgorithm::sequential_quick_sort <std::list<int>>(first, last);
+		return 0;
+	};
+	auto stdsort = [](std::list<int>::iterator first, std::list<int>::iterator last, int) ->int
+	{
+		std::list<int> temp;
+		copy(first, last, std::back_inserter(temp));
+		temp.sort();
+		return 0;
+	};
+	test.runtest(std::bind(func, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
+		std::bind(stdsort, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
 }
