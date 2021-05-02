@@ -58,8 +58,9 @@ void test()
 	//testsleepsort(p, v);
 	//std::this_thread::sleep_for(std::chrono::seconds(60));
 		//testsleepsortusefuture(p, v);
-		testBogo1(p, v);
+//		testBogo1(p, v);
 //		testBogo2(p, v);
+		testSpaghettiSort(p, v);
 	utilities::println_range(v, "Data:");
 		///////////////////////////////////////œyÔ‡¾Q³Ì³ØÏàêP½YÊø
 }

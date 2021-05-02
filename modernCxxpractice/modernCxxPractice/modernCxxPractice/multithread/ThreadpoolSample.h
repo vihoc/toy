@@ -355,6 +355,50 @@ auto testBogo2(std::shared_ptr<paraalgorithm::ThreadPool> pool, Container& Data)
 	}
 	
 }
+//this is a sample code for use promise to return some info
+template<typename Container>
+auto testSpaghettiSort(std::shared_ptr<paraalgorithm::ThreadPool> pool, Container& Data)
+{
+	static_assert (std::is_same<Container::value_type, int>::value, "we only support int element now");
+	using elementType = typename Container::value_type;
+	std::packaged_task<Container(Container&)> SpaghettiSort(
+		[](Container& data) ->Container
+		{
+			Container temp;
+			temp.reserve(data.size());
+			Container ret;
+			ret.reserve(data.size());
+			std::transform(data.begin(), data.end(), std::back_inserter(temp), [](elementType& x)
+				{
+					return x;
+				});//suppose iota is a infinite Spaghetti
+			while (0 != temp.size())
+			{
+				typename Container::iterator it = std::min_element(temp.begin(), temp.end());
+				ret.emplace_back(*it);
+				temp.erase(it);
+			}
+			return ret;
+		});
+
+		std::future<Container> result = SpaghettiSort.get_future();
+		std::shared_ptr<std::promise<int>> finishpromise = std::make_shared<std::promise<int>>();
+		auto temp = std::make_shared<submitwithFinish>
+			(
+				[&Data, &SpaghettiSort]()
+				{
+					return SpaghettiSort(Data);
+				}
+		);
+		temp->setPromise(finishpromise);
+		std::shared_ptr < paraalgorithm::task > tasktocommit = temp;
+		pool->commit(tasktocommit);
+		std::shared_future<int> isjobdone = finishpromise->get_future().share();
+		while (1 != isjobdone.get())
+			;
+		utilities::println_range(result.get(), "Data:");
+
+}
 
 /// <summary>
 /// ºï×ÓÅÅÐò TODO
