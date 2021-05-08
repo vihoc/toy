@@ -66,7 +66,7 @@ namespace threadUtilities
 		 }
 	private:
 		T& data;
-		std::mutex lock;
+		mutable std::mutex lock;
 	};
 
 }// end of namespace threadUtilities

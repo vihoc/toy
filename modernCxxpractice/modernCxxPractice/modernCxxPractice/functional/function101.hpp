@@ -363,6 +363,25 @@ namespace functional
 			if (n <= 1) return n;
 			return fibonacci(n - 1) + fibonacci(n - 2);
 		}
+		//for here, we write those code in header file, should be template<>
+		class fibnaccimem
+		{
+		public:
+			fibnaccimem() :value{ 0, 1 } {};
+			~fibnaccimem() = default;
+			unsigned int operator()(unsigned int n) const
+			{
+				if (value.size() > n) return value[n];
+				else
+				{
+					const auto result = operator()(n - 1) + operator()(n - 2);
+					value.emplace_back(result);
+					return result;
+				}
+			}
+		private:
+			mutable std::vector<unsigned int> value;
+		};
 
 	}
 
@@ -402,7 +421,14 @@ namespace functional
 		}
 
 	}
-
+	auto testFib() -> void
+	{
+		testLazyeva::fibnaccimem lazy;
+		for(int i = 0; i < 50; ++i)
+		{
+			std::cout << lazy(i) << " " <<std::endl;
+		}
+	}
 	auto countTime() -> void
 	{
 		constexpr int maxcount = 5;
@@ -617,6 +643,7 @@ namespace functional
 		immutablesample1();
 		testMutableclass();
 		testDelay();
+		testFib();
 		countTime();
 		return 0;
 	}

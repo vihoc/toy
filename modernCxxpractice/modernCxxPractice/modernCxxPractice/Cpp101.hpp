@@ -183,6 +183,7 @@ namespace CPP101
 		else  std::cout << "ptr is not initialized" << std::endl;
 		someThing s4;
 		auto shard_somep1 = s4.getshardPtr();
+#if !_HAS_CXX20 //shared_ptr::unique has been removed from C++20
 		if (shard_somep1.unique()) std::cout << "shard_somep1 is unique" << std::endl; 
 		else std::cout << "shard_somep1 is not unique" << std::endl;
 		std::cout << "shard_somep1's point counter" << shard_somep1.use_count()<< std::endl;
@@ -195,6 +196,7 @@ namespace CPP101
 		else std::cout << "shard_somep1 is not unique" << std::endl;
 		std::cout << "shard_somep1's point counter" << shard_somep2.use_count() << std::endl;
 
+#endif
 		std::cout << "try weak ptr" << std::endl;
 		
 		auto shard_s5 = std::make_shared<int>(1234);
