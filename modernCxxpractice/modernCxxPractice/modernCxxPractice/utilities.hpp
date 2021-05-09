@@ -4,19 +4,21 @@
 #include  <chrono>
 namespace utilities
 {
+	using  PerformanceTime_t = std::chrono::duration<double, std::chrono::seconds::period>;
 	//œyÔ‡º¯”µµÄß\ÐÐ•rég ·µ»Østd::chrono::duration<double>
 	template<typename Callback, typename T>
 	auto TestFuncRunningTime(Callback cb, T& result)
 	{
+		using Seconds = std::chrono::duration<double, std::chrono::seconds::period>;
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 		result = cb();
 		std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-		return std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+		return PerformanceTime_t(end - start);
 	}
 
 
 	template<typename Range>
-	inline auto println_range(Range const& range, const std::string& describe)
+	inline auto& println_range(Range const& range, const std::string& describe)
 	{
 		std::cout << describe <<std::endl;
 		std::copy(begin(range), end(range), std::ostream_iterator<decltype(*begin(range))>(std::cout, " "));
@@ -24,13 +26,13 @@ namespace utilities
 	}
 
 	template<typename Printable>
-	inline auto println(Printable const& to_print, const std::string& describe)
+	inline auto& println(Printable const& to_print, const std::string& describe)
 	{
 		return std::cout << "describe" << to_print << std::endl;
 	}
 
 	template<typename Printable>
-	inline auto println(Printable&& to_print, const std::string&& describe)
+	inline auto& println(Printable&& to_print, const std::string&& describe)
 	{
 		return std::cout << describe << std::move(to_print) << std::endl;
 	}

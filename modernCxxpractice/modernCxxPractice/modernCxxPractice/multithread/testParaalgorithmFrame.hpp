@@ -36,8 +36,8 @@ namespace paraalgorithm
 		void runtest(CallParallel callbackp, CallNomal callbackn)
 		{
 			value_type resultP = 0, resultN = 0;
-			std::chrono::duration<double> parallelRunTime;
-			std::chrono::duration<double> NomalRunTime;
+			utilities::PerformanceTime_t parallelRunTime;
+			utilities::PerformanceTime_t NomalRunTime;
 			std::thread ThreadParallel
 			{
 				[&resultP, this, &parallelRunTime, &callbackp]()
