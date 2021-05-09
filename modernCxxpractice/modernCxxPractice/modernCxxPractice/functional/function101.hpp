@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <functional>
 #include <chrono>
+#include <map>
+#include <tuple>
 #include <fstream>
 #include <iostream>
 
@@ -383,6 +385,42 @@ namespace functional
 			mutable std::vector<unsigned int> value;
 		};
 
+
+		template <typename Result, typename... Arg>
+		auto make_memoized(Result (*f)(Arg...))
+		{
+			std::map<std::tuple<Arg...>, Result> cache;
+			return [f, cache](Arg... args) mutable ->Result
+			{
+				const auto arg_tuple = std::make_tuple(args...);
+				const auto cached = cache.find(arg_tuple);
+				if (cached == cache.end())
+				{
+					auto result = f(args...);
+					cache[arg_tuple] = result;
+					return result;
+				}
+				else return cached->second;
+			};
+		}
+		template <typename Result, typename... Arg>
+		auto make_memoized(std::function<Result (Arg...)> f)
+		{
+			std::map<std::tuple<Arg...>, Result> cache;
+			return [f, cache](Arg... args) mutable ->Result
+			{
+				const auto arg_tuple = std::make_tuple(args...);
+				const auto cached = cache.find(arg_tuple);
+				if (cached == cache.end())
+				{
+					auto result = f(args...);
+					cache[arg_tuple] = result;
+					return result;
+				}
+				else return cached->second;
+			};
+		}
+
 	}
 
 	auto testDelay() -> void
@@ -429,6 +467,126 @@ namespace functional
 			std::cout << lazy(i) << " " <<std::endl;
 		}
 	}
+
+	auto testmakemem()->void
+	{
+		std::vector<unsigned int> value = { 0, 1 };
+		std::function<unsigned int(unsigned int)> fib;
+		fib = [&value, &fib](unsigned int n)
+		{
+			if (value.size() > n) return value[n];
+			else
+			{
+				auto result = fib(n - 1) + fib(n - 2);
+				value.emplace_back(result);
+				return result;
+			}
+//			return 0 == n ? 0 : 1 == n ? 1 : fib(n - 1) + fib(n - 2);
+		};
+		auto fibomem = testLazyeva::make_memoized(fib);
+		for (int i = 0; i < 50; ++i)
+		{
+			std::cout << fibomem(i) << " " << std::endl;
+		}
+	}
+
+
+	namespace lazystring_concat
+	{
+		template <typename... String>
+		class lazy_string_concat_helper;
+		template <typename LastString, typename... String>
+		class lazy_string_concat_helper<LastString, String...>
+		{
+		private:
+			const LastString& data;
+			lazy_string_concat_helper<String... > tail;
+		public:
+			lazy_string_concat_helper(const LastString& otherData, lazy_string_concat_helper<String...> otherTail)
+				:data(otherData), tail(otherTail)
+			{}
+			std::size_t size()const { return data.size() + tail.size(); }
+			template <typename It>
+			void save(It end) const
+			{
+				const auto begin = end - data.size();
+				std::copy(data.cbegin(), data.cend(), begin);
+				tail.save(begin);
+			}
+
+			operator std::string()const
+			{
+				std::string result(size(), '\0');
+				save(result.end());
+				return result;
+			}
+
+
+			lazy_string_concat_helper<std::string, LastString, String...>
+				operator + (const std::string& other)const 
+			{
+				return lazy_string_concat_helper<std::string, LastString, String...>(other, *this);
+			}
+			lazy_string_concat_helper<std::string, LastString, String...>
+				operator + (const std::string&& other)const
+			{
+				return lazy_string_concat_helper<std::string, LastString, String...>(other, *this);
+			}
+
+		};
+		template <>
+		class lazy_string_concat_helper<>
+		{
+		private:
+			
+		public:
+			lazy_string_concat_helper()
+			{}
+			int size() const { return 0; }
+			template <typename It>
+			void save(It end) const
+			{
+				
+			}
+
+
+			lazy_string_concat_helper<std::string>
+				operator + (const std::string& other)const
+			{
+				return lazy_string_concat_helper<std::string>(other, *this);
+			}
+			lazy_string_concat_helper<std::string>
+				operator + (const std::string&& other)const
+			{
+				return lazy_string_concat_helper<std::string>(other, *this);
+			}
+
+		};
+
+		template <typename Stream, typename... Strings>
+		Stream& operator<<(Stream& stream,
+			const lazy_string_concat_helper<Strings...>& strings)
+		{
+			return stream << static_cast<std::string>(strings);
+		}
+
+
+	}
+
+
+	auto testlazystring_concat() ->void
+	{
+		std::string firstName = "viho";
+		std::string lastName = "zhu";
+		lazystring_concat::lazy_string_concat_helper<> lazy;
+		const auto result = lazy + "OMG, it's " + firstName + ", " + lastName + " sama";
+		lastName = "chen";
+		const std::string resultstring = lazy + "OMG, it's " + firstName + ", " + lastName + " sama";
+		std::cout << result << std::endl;
+		std::cout << resultstring << std::endl;
+	
+	}
+
 	auto countTime() -> void
 	{
 		constexpr int maxcount = 5;
@@ -644,6 +802,8 @@ namespace functional
 		testMutableclass();
 		testDelay();
 		testFib();
+		testmakemem();
+		testlazystring_concat();
 		countTime();
 		return 0;
 	}
