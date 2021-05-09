@@ -94,11 +94,12 @@ namespace paraalgorithm
 							++idleThreadNumber;
 							//獲取隊列中的一個元素
 
-							std::shared_ptr<task> curtask;
-							
-							if(taskqueue.try_pop(curtask))
-								curtask->runtask();
-								
+// 							std::shared_ptr<task> curtask;
+// 							
+// 							if(taskqueue.try_pop(curtask))
+// 								curtask->runtask();
+							threadsafe_stack<std::shared_ptr<task>>::optionalT curtask = taskqueue.pop();
+							if (curtask) curtask.value()->runtask();
 							--idleThreadNumber;
 #ifdef THREADPOOL_DEBUG
 							exitThread();

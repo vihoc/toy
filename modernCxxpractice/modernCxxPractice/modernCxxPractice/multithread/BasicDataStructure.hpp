@@ -1,6 +1,7 @@
 #ifndef __BASICDATASTURCTURE_H__
 #define __BASICDATASTURCTURE_H__
 #include<queue>
+#include <optional>
 namespace paraalgorithm
 {
 
@@ -12,8 +13,9 @@ namespace paraalgorithm
 	template<typename T>
 	class threadsafe_stack
 	{
-		// 	public:
+	 	public:
 		// 		typedef  T task_type;
+		typedef std::optional<T> optionalT;
 	public:
 		threadsafe_stack() {}
 		threadsafe_stack(const threadsafe_stack& other)
@@ -27,15 +29,16 @@ namespace paraalgorithm
 			std::lock_guard<std::mutex> lock(m);
 			data.push(new_value);
 		}
-		T pop()
+		optionalT pop()
 		{
 
 			std::lock_guard<std::mutex> lock(m);
-			if (data.empty()) throw empty_stack();
+			if (data.empty()) 	return {};
+				//throw empty_stack();
 			//std::shared_ptr<T> const res(std::make_shared<T>(data.top()));
 			T res = data.top();
 			data.pop();
-			return res;
+			return optionalT(res);
 		}
 		void pop(T& value)
 		{
